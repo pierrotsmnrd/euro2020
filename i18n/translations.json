@@ -1,0 +1,35 @@
+{
+"years_old":{"fr":"ans", "en":"years old"},
+"dim_height" : {"fr":"Taille (cm)", "en":"Height (cm)"},
+"dim_weight" : {"fr":"Poids (kg)",  "en":"Weight (cm)"},
+"dim_field_position_hr" : {"fr":"Poste",  "en":"Position"},
+"dim_international_name" : {"fr":"Nom",  "en":"Name"},
+"dim_age" : {"fr":"Age",  "en":"Age"},
+"dim_country_code" : {"fr":"Equipe",  "en":"Team"},
+"dim_international_name_club" : {"fr":"Club",  "en":"Club"},
+    
+"# Positions":{},
+"GOALKEEPER" : {"fr":"Gardien", "en":"Goalkeeper"},
+"FORWARD" : {"fr":"Avant", "en":"Forward"},
+"DEFENDER" : {"fr":"Défenseur", "en":"Defender"},
+"MIDFIELDER" : {"fr":"Milieu", "en":"Midfielder"},
+    
+"GOALKEEPER_plural" : {"fr":"Gardiens", "en":"Goalkeepers"},
+"FORWARD_plural" : {"fr":"Avants", "en":"Forwards"},
+"DEFENDER_plural" : {"fr":"Défenseurs", "en":"Defenders"},
+"MIDFIELDER_plural" : {"fr":"Milieux", "en":"Midfielders"},
+    
+"#Players weight and height":{},
+"title_players_weight_and_size" : {
+    "fr":"Taille et poids des joueurs par poste",
+    "en":"Players' height and weight, per position"
+},
+"subtitle_players_weight_and_size":{
+    "fr":"sur la base de {%shown%} joueurs sur  {%total%} pour lesquels la taille et le poids sont connus.",
+    "en":"based on {%shown%} players among {%total%} total, for whom their height and weight are known."
+},
+"label_number" : {"fr":"Effectif", "en":"Number"}  ,
+"label_players" : {"fr":"Joueurs", "en":"Players"} ,
+"title_positions_distribution" : {"fr":"Répartition des postes par équipe", 
+                                  "en":"Distribution of players' positions per team"}  
+}
