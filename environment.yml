@@ -1,0 +1,20 @@
+name: euro2020
+
+channels:
+  - pyviz
+  - conda-forge
+
+dependencies:
+  - python
+  - pip
+  - jupyterlab
+  - pandas
+  - holoviews
+  - geoviews
+  - geoviews-core
+  - param
+  - panel
+  - hvplot
+
+    
+

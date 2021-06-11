@@ -1,0 +1,8 @@
+pandas
+panel
+holoviews
+#geoviews
+#geoviews-core
+cartopy==0.17.0
+hvplot
+param
