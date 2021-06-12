@@ -7,7 +7,20 @@ http://holoviews.org/reference/streams/bokeh/Tap.html#streams-bokeh-gallery-tap
 
 TODO :
 - convert kg & cm into imparial 
+
 - Répartition des ligues des joueurs : ajouter une ligne Total, le faire en 2 plots additionnés 
+
+- Vérifier ca : https://fr.wikipedia.org/wiki/Liste_de_clubs_de_football_jouant_dans_un_championnat_%C3%A9tranger 
+    et corriger au moins pour Cardiff FC 
+
+_ Passer tous les plots en revue et fixer les tools
+_ stabiliser les hacks dans les themes 
+
+- Plots des poids et taille moyens des joueurs par PAYS :   
+    - corriger color map ( A et F sont trop proches)
+    - corriger "selection d'un groupe" -> dispararition du point, faire aussi disparaitre le nom du pays (difficile ?)
+
+
 
 
 Onglet 1 : Overview / Vue d'ensemble

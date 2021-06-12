@@ -24,7 +24,7 @@ pd.options.plotting.backend = 'holoviews'
 
 from panel.template import DarkTheme
 
-from plots import positions_distribution, countries_local_leagues, leagues_distribution, countries_clubs
+from plots import *
 
 class OverviewPage(param.Parameterized):
 
@@ -190,11 +190,60 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
                     pn.pane.Markdown(f'''Pour avoir une meilleure vision de la répartition des clubs, sélectionnez votre équipe préférée''')
             ),
             pn.Row(pn.Spacer(width=50),
-                countries_local_leagues(self.full_df, self.lang_id, self.theme),
-                bla
+                sankey_ui(self.full_df, self.lang_id, self.theme)
             )
 
         ]
+
+
+        items += [
+            pn.pane.HTML("<br />"*3),
+            pn.pane.Markdown(f'''### {_('title_players_funfacts')}'''),
+
+             pn.Row(pn.Spacer(width=50), 
+                    pn.pane.Markdown(f'''Le physique des joueurs varient beaucoup d'un poste à l'autre. Regardons la répartition du poids et des taille selon leur position''')
+            ),
+            pn.Row(pn.Spacer(width=50),
+                pn.Tabs( 
+                    ('per country', pn.Row(players_height_weight_per_country(self.full_df, self.lang_id, self.theme))),
+                    ('per position', pn.Row(players_height_weight(self.full_df, self.lang_id, self.theme) )),
+                 tabs_location='left'
+                )
+            ),
+        ]
+
+        items += [
+            pn.pane.HTML("<br />"*3),
+            pn.pane.Markdown(f'''### {_('title_players_funfacts')}'''),
+
+             pn.Row(pn.Spacer(width=50), 
+                    pn.pane.Markdown(f'''Le physique des joueurs varient beaucoup d'un poste à l'autre. Regardons la répartition du poids et des taille selon leur position''')
+            ),
+            pn.Row(
+                pn.Tabs( 
+                    ('per age',    pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'age'))),
+                    ('per height', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'height') )),
+                    ('per weight', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'weight') )),
+                 tabs_location='left'
+                )
+            ),
+        ]
+
+            
+
+
+        #     pn.pane.HTML("<br />"*3),
+        #      pn.Row(pn.Spacer(width=50),
+        #         teams_average_age(self.full_df, self.lang_id, self.theme)
+        #     )
+        
+        # ] 
+        # - Joueurs : quelque fun facts
+        #     -  (06)
+        #     - Age (selon le poste ?)
+            
+        #     - Joueurs qui évoluent ensemble en club et qui s'affronteront en matchs
+        #     - Sankey reversed
 
 
         result = pn.Column(objects=items)

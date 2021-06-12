@@ -8,7 +8,8 @@
 "dim_country_code" : {"fr":"Equipe",  "en":"Team"},
 "dim_country_code_club" : {"fr":"Pays du club",  "en":"Club's country"},
 "dim_international_name_club" : {"fr":"Club",  "en":"Club"},
-    
+"dim_group" : {"fr":"Groupe",  "en":"Group"},    
+
 "# Positions":{},
 "GOALKEEPER" : {"fr":"Gardien", "en":"Goalkeeper"},
 "FORWARD" : {"fr":"Avant", "en":"Forward"},
