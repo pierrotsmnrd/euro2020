@@ -12,23 +12,67 @@ import holoviews as hv
 from bokeh.models import HoverTool
 import param
 
-from i18n import _, countries_translations, field_positions_colors
+from i18n import _, countries_translations, field_positions_colors, get_lang_id
 
 pd.options.plotting.backend = 'holoviews'
 
 from pdb import set_trace as bp
 
-#from panel.template import DefaultTheme
-#from panel.template import DarkTheme
 
 
-# We want the count of each field_position for each country
-# We keep column international_name because we're sure there are no NA values for this column
+def sort_options():
 
-def positions_distribution(full_df, lang_id, theme='light'):
+    return { _('dim_country_code'):"country_name", 
+             _("FORWARD_plural"):"FORWARD",
+             _("MIDFIELDER_plural"):"MIDFIELDER",
+             _("DEFENDER_plural"):"DEFENDER",
+             _("GOALKEEPER_plural"):"GOALKEEPER",
+            }
+
+def positions_distribution(full_df, lang_id, theme='light', sort="country_name", asc=True):
+
+    
+
+    sort_selector =  pn.widgets.Select(
+            name='',
+            options=list(sort_options().keys()),
+            value=list(sort_options().keys())[0], 
+            width=250)
+
+    asc_cbox = pn.widgets.Checkbox(name=_('ascending'), value=True, width=80)
+
+    plot = positions_distribution_plot(full_df, lang_id, theme='light', sort="country_name", asc=True)
+
+    bound_fn = pn.bind(positions_distribution_plot,
+                    full_df=full_df, 
+                    lang_id=lang_id, 
+                    theme=theme,
+                    sort=sort_selector,
+                    asc=asc_cbox
+                    )
+
+    
+
+    result = pn.Column(
+        pn.Row(pn.pane.Markdown(f'''### {_('title_positions_distribution', lg_id=lang_id)}''', sizing_mode='stretch_width'),
+                
+                 pn.pane.Markdown(_('sort_by')), 
+                 sort_selector, 
+                 asc_cbox),
+        bound_fn
+    )
+
+    return result
+
+
+def positions_distribution_plot(full_df, lang_id, theme='light', sort="country_name", asc=True):
+   
+    
     counts = full_df.groupby(['country_code', 'field_position']) \
                 .size().reset_index(name = "count").sort_values(by="country_code", ascending=True)
 
+    counts['country_name'] = counts['country_code'].transform(lambda x:"%s %s"%(_(x, countries_translations(), lang_id),_(x, countries_translations(), 'flag'))  )
+    
     maxis = counts.groupby('field_position').max().rename(columns={'count':'maxi'})
 
 
@@ -71,7 +115,18 @@ def positions_distribution(full_df, lang_id, theme='light'):
     plots_per_position = {}
     final_plot = None
 
+    #default
+    ordered_countries_names = counts.sort_values('country_name', ascending=not asc)['country_name'].values
+
+    # we use this to reorder using redim.values
+    if sort in sort_options():
+        sort = sort_options()[sort]
+        if sort != "country_name":
+            ordered_countries_names = counts[ counts['field_position']==sort ].sort_values('count', ascending=not asc)['country_name'].values
     
+    
+
+
     positions = full_df.field_position.unique()
     for p in positions:
 
@@ -106,8 +161,8 @@ def positions_distribution(full_df, lang_id, theme='light'):
                   show_legend=False,
                   xticks=[ i for i in range(max_for_p)], 
                   labelled=[],
-                  fontsize={'yticks': 10},
-                 )
+                  fontsize={'yticks': 10, 'xticks':10},
+                 ).redim.values(country_name=ordered_countries_names)
 
         plots_per_position[p] = plot
 
@@ -124,6 +179,7 @@ def positions_distribution(full_df, lang_id, theme='light'):
     
     
 def countries_local_leagues(full_df, lang_id, theme='light'):
+    
     total_counts = full_df.groupby(["country_code"]).size().to_dict()
 
     # Which national teams rely the most on their local leagues?
@@ -149,7 +205,7 @@ def countries_local_leagues(full_df, lang_id, theme='light'):
                             #title="Par pays, nombre de joueur sélectionnés qui évoluent dans le championnat national",
                             title='Nombre de joueurs sélectionnés évoluant dans la ligue de leur pays',
 
-                            fontsize={'yticks': 10},
+                            fontsize={'yticks': 10, 'xticks':10},
                             shared_axes=False,
                             ) \
                         .redim.label(count='Nombres de joueurs sélectionnés', country_name='Equipe')
@@ -158,7 +214,7 @@ def countries_local_leagues(full_df, lang_id, theme='light'):
 
 
 
-def leagues_distribution(full_df, lang_id, theme='light'):
+def leagues_distribution_per_team(full_df, lang_id, theme='light'):
         
 
     df_grouped_by = full_df.groupby(["country_code", "country_code_club"])
@@ -193,7 +249,10 @@ def leagues_distribution(full_df, lang_id, theme='light'):
     count_per_country_club['country_name'] = count_per_country_club['country_code'] \
                                     .transform(lambda x:"%s %s"%(_(x, countries_translations(), lang_id),_(x, countries_translations(), 'flag'))  )
     count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
-                                    .transform(lambda x:"%s %s"%(_(x, countries_translations(), lang_id),_(x, countries_translations(), 'flag'))  )
+                                    .transform(lambda x:"%s %s"%(_(x, countries_translations(),),_(x, countries_translations(), 'flag'))  )
+
+    count_per_country_club['league_name'] = count_per_country_club['country_code_club'] \
+                                    .transform(lambda x:"%s %s"%(_(x, countries_translations(), 'league'),_(x, countries_translations(), 'flag'))  )
     count_per_country_club['country_flag'] = count_per_country_club['country_code'] \
                                     .transform(lambda x: _(x, countries_translations(), 'flag'))  
 
@@ -205,11 +264,11 @@ def leagues_distribution(full_df, lang_id, theme='light'):
 
 
     main_heatmap = count_per_country_club.hvplot.heatmap(y='country_name', 
-                                        x='country_name_club', 
+                                        x='league_name', 
                                         C='count', 
                                         hover_cols=['count'],
-                                        height=600,
-                                        width=1100, 
+                                        height=650,
+                                        width=1200, 
                                         colorbar=True,
                                         #cmap='kgy', 
                                         cmap=colormap,
@@ -219,16 +278,16 @@ def leagues_distribution(full_df, lang_id, theme='light'):
                                     .opts(xrotation=45, 
                                         bgcolor='white',
                                         toolbar=None,
-                                        fontsize={'yticks': 10},
+                                        fontsize={'yticks': 10, 'xticks':10},
                                         shared_axes=False,
                                         ) \
                                     .redim.values(
                                         country_name=count_per_country_club['country_name'].sort_values()[::-1],
-                                        country_name_club=count_per_country_club['country_name_club'].sort_values(),
+                                        league_name=count_per_country_club.sort_values('country_name_club')['league_name'],
                                     ) \
-                                    .redim.label(country_name="Equipes", 
-                                                country_name_club="Ligue des joueurs selectionnés",
-                                                count='Total')
+                                    .redim.label(country_name=_("dim_country_code"), 
+                                                league_name=_("dim_league_name"),
+                                                count=_('dim_total'))
 
     
     # country_club_count = count_per_country_club.groupby(["country_name", "country_flag"])  \
@@ -263,6 +322,49 @@ def leagues_distribution(full_df, lang_id, theme='light'):
     #                                 ) 
 
     return main_heatmap 
+
+
+def leagues_distribution(full_df, theme='light'):
+
+    count_per_country_club = full_df.groupby([ "country_code_club"]).size().reset_index(name="count").sort_values('count', ascending=False)
+    
+    #count_per_country_club = count_per_country_club[  count_per_country_club['count'] >= 10 ]
+        
+    count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
+                                    .transform(lambda x:"%s %s"%(_(x, countries_translations(), 'league'),_(x, countries_translations(), 'flag'))  )
+    
+
+    main = count_per_country_club.hvplot.bar( x='country_name_club',
+                                              y='count', 
+                                            height=600,
+                                            width=1000,
+                                            cmap='kgy',
+                                            color='count',
+                                            title=_('leagues_distribution_plot_title'),
+                                    ).opts(
+                                            xrotation=45, 
+                                            fontsize={'yticks': 10, 'xticks':10},
+                                            toolbar = None, 
+                                            shared_axes=False,
+                                    ).redim.label(
+                                                country_name_club=_('dim_league_name'),
+                                                count=_('dim_total'))
+
+    align_on =  "ENG"
+    x_position = "%s %s"%(_(align_on, countries_translations(), 'league'),_(align_on, countries_translations(), 'flag'))
+    highlight_left =  hv.VSpan(0, 6, alpha=0.5, ).opts(color='#636363', shared_axes=False) * \
+                        hv.Text( x_position,
+                                165, '67% of all\nthe players').opts(color='#FFFFFF',
+                                 text_align='left')
+
+    align_on =  "BEL"
+    x_position = "%s %s"%(_(align_on, countries_translations(), 'league'),_(align_on, countries_translations(), 'flag'))
+    highlight_right =  hv.Text( x_position,
+                                170, '33% of all the players').opts(color='white',
+                                 text_align='left')
+
+
+    return (main * highlight_left * highlight_right).opts(ylim=(0,180))
 
 
 
@@ -310,7 +412,7 @@ def countries_clubs(full_df, lang_id, theme='light', full=False):
     count_per_club['country_name'] = count_per_club['country_code'] \
                                     .transform(lambda x:"%s %s"%(_(x, countries_translations(), lang_id),_(x, countries_translations(), 'flag'))  )
     count_per_club['country_name_club'] = count_per_club['country_code_club'] \
-                                     .transform(lambda x:"%s %s"%(_(x, countries_translations(), lang_id),_(x, countries_translations(), 'flag'))  )
+                                     .transform(lambda x:"%s %s"%(_(x, countries_translations(), 'league'),_(x, countries_translations(), 'flag'))  )
 
     count_per_club['international_name_club'] = count_per_club['international_name_club'] + " " + \
                                                  count_per_club['country_code_club'] \
@@ -331,25 +433,72 @@ def countries_clubs(full_df, lang_id, theme='light', full=False):
                                         height=600,
                                         width=1350, 
                                         colorbar=True,
-                                        #cmap='kgy', # 'kbc'
                                         cmap=colormap,
-                                        title='Répartition des clubs des joueurs' +  '(à partir de 3 joueurs d\'un même club par équipe)' if not full else '',
+                                        title=_('countries_clubs_plot_title') + _('countries_clubs_plot_title_extra') if not full else '',
                                         ) \
                                     .opts(xrotation=45, 
                                           clim=(0,10),
                                             bgcolor='white',
                                         toolbar = None, 
-                                        fontsize={'yticks': 10}
+                                        fontsize={'yticks': 10, 'xticks':10},
+                                        shared_axes=False,
                                     ) \
                                     .redim.values(
                                             international_name_club=yticks_sorted, 
                                             country_name=count_per_club['country_name'].sort_values()[::-1] ) \
                                     .redim.label(country_name="Equipes", 
-                                                international_name_club="Clubs des joueurs selectionnés", 
-                                                count='Total') 
+                                                international_name_club=_('dim_international_name_club'), 
+                                                count=_('dim_total')) 
 
 
     return heatmap
+
+
+
+def clubs_distribution(full_df, theme='light', full=False):
+
+    count_per_club =  full_df.groupby(["international_name_club", "country_code_club"]).size().reset_index(name="count").sort_values('count', ascending=False)
+    count_per_club = count_per_club[  count_per_club['count'] > 5 ]
+
+
+    count_per_club['international_name_club'] = count_per_club['international_name_club'] + "-" + \
+         count_per_club['country_code_club'].transform(lambda x:_(x, countries_translations(), 'flag') )
+
+    
+
+
+    result = count_per_club.hvplot.bar( x='international_name_club',
+                            y='count', 
+                            height=500,
+                            width=1000,
+                            cmap='kgy',
+                                    color='count',
+                                    title=_('clubs_distribution_plot_title')
+                                    ).opts(
+                                            xrotation=45, 
+                                            fontsize={'yticks': 10, 'xticks':10},
+                                            toolbar = None, 
+                                            shared_axes=False,
+                                            #ylim=(0,18),
+                                    ).redim.label(
+                                                international_name_club=_('dim_international_name_club'),
+                                                count=_('dim_total'))                                    
+
+    #hardcoded because I need to spare time and mental health
+    align_on =  "Man. City-"+_('ENG', countries_translations(), 'flag')
+    
+    highlight =  hv.VSpan(0, 5 ).opts(color='#636363', 
+                                 shared_axes=False,apply_ranges=True)
+
+    #highlight =  hv.VLine(4.5 ).opts(color='#636363', shared_axes=False,).opts(ylim=(0,18))                           
+    highlight = highlight * \
+                        hv.Text( align_on,
+                                19, '11% of all\nthe players').opts(color='#FFFFFF',
+                                 text_align='left')
+
+    
+    return (result*highlight).opts(ylim=(0,22), shared_axes=False,)
+
 
     
 _sankey_full_singleton = None
@@ -515,7 +664,7 @@ def sankey_for_country_code(country_code, sankey_full, lang_id, theme):
                         label_position='right',
                         node_sort=False,
                         toolbar=None,
-                        fontsize={'yticks': 10},
+                        fontsize={'yticks': 10, 'xticks':10},
                         hooks = hooks
                     ).redim(source='De', 
                             destination="Vers", 
@@ -573,7 +722,6 @@ def players_height_weight(full_df, lang_id, theme='light'):
                                       y='height', 
                                       c='field_position_color',                                   
                                       by='field_position_hr',
-
                                       hover_cols=[ "international_name",
                                                     "field_position_hr",
                                                     "age",
@@ -598,6 +746,74 @@ def players_height_weight(full_df, lang_id, theme='light'):
                             .redim.label(
                                    height=_('dim_height'), 
                                    weight=_('dim_weight'), 
+                                   field_position_hr= _('dim_field_position_hr'),
+                                   international_name= _('dim_international_name'),
+                                   age = _('dim_age'),
+                                   country_code = _('dim_country_code'),
+                                   international_name_club = _('dim_international_name_club'),        
+                                  ) 
+
+    #shown_count = len(full_df.loc[ ~(full_df.height.isna() | full_df.weight.isna()) ])
+
+    #subtitle = _('subtitle_players_weight_and_size').replace("{%shown%}", str(shown_count)).replace("{%total%}",str(len(full_df)) )
+    
+    #result = pn.Column(pn.pane.Markdown(f'''## {_('title_players_weight_and_size')}
+    #_{subtitle}_'''), 
+    #          scatter)
+    
+    return scatter
+
+
+
+def players_age_nbr_selections(full_df, lang_id, theme='light', dim="nbr_selections"):
+
+    tooltips_raw = [
+        (_('dim_international_name'), '@international_name'),
+        (_('dim_field_position_hr'), '@{field_position_hr}'),
+        (_('dim_age'), f"@age { _('years_old') }"),
+        (_('dim_country_code'), '@country_name @country_flag'),
+        (_('dim_height'), '@height cm'),
+        (_('dim_weight'), '@weight kg'),
+        (_('dim_international_name_club'), '@international_name_club, @country_name_club @country_flag_club'),
+        (_('dim_nbr_selections'), '@nbr_selections'),
+        (_('dim_nbr_selections_euro'), '@nbr_selections_euro'),
+        (_('dim_nbr_selections_wcup'), '@nbr_selections_wcup')
+    ]
+
+
+    hover = HoverTool(tooltips=tooltips_raw)
+
+    scatter = full_df.hvplot.scatter( x='age_float', 
+                                      y=dim, 
+                                      c='field_position_color',                                   
+                                      by='field_position_hr',
+                                      hover_cols=[ "international_name",
+                                                    "field_position_hr",
+                                                    "age",
+                                                    "country_name",
+                                                    "country_flag",
+                                                    "country_name_club",
+                                                    "country_flag_club",
+                                                    "weight",
+                                                    "height",
+                                                    "international_name_club",
+                                                    "nbr_selections",
+                                                    "nbr_selections_euro",
+                                                    "nbr_selections_wcup"],
+                                      height=600, 
+                                      width=800, 
+                                      muted_alpha=0.1,
+                                     tools=[hover],
+                                     
+                                    ) \
+                            .opts(
+                                  legend_position='bottom_right', 
+                                  legend_opts={"title":None},
+                                  shared_axes=False,
+                                  show_grid=True) \
+                            .redim.label(
+                                   age_float=_('dim_age'), 
+                                   nbr_selections=_('dim_nbr_selections'), 
                                    field_position_hr= _('dim_field_position_hr'),
                                    international_name= _('dim_international_name'),
                                    age = _('dim_age'),
@@ -701,6 +917,7 @@ def players_height_weight_per_country(full_df,lang_id, theme):
                                   legend_position='bottom_right', 
                                   legend_opts={"title":None},
                                   #padding=((0.1, 0.2), 0.1)
+                                  shared_axes=False,
                                   xlim=(72,82),
                                   show_grid=True,
                             ) \

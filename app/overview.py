@@ -1,5 +1,8 @@
+
 from datetime import datetime as dt
 from threading import main_thread
+from bokeh.models.layouts import Spacer
+from holoviews.core.util import one_to_one
 
 import pandas as pd
 import numpy as np
@@ -12,7 +15,10 @@ import holoviews as hv
 from bokeh.models import HoverTool
 import param
 
+import i18n
 from i18n import _
+from menu import menu
+
 from panel.template import DefaultTheme
 
 from pdb import set_trace as bp
@@ -22,9 +28,18 @@ pd.options.plotting.backend = 'holoviews'
 #pn.config.sizing_mode = 'stretch_width'
 
 
+css = '''
+.bk-root {
+    font-size:14px;
+}
+'''
+
+pn.extension(raw_css=[css])
+
 from panel.template import DarkTheme
 
 from plots import *
+from explanations import *
 
 class OverviewPage(param.Parameterized):
 
@@ -51,13 +66,12 @@ class OverviewPage(param.Parameterized):
 
         self.flag_selector = pn.widgets.Select.from_param(
             self.param.selected_flag,
-            name=_('Language'),
+            name="", #_('Language'),
             value=self.languages_dict[lang_id],
             width=80
             )
 
         self.flag_selector_watcher = self.flag_selector.param.watch(self.update_lang_id, ['value'], onlychanged=False)
-
 
         # self.flag_selector.jscallback(value='''
         #     window.location = location.href.split("?")[0] + "?lg=" + languages_dict[select.value] 
@@ -76,51 +90,43 @@ class OverviewPage(param.Parameterized):
         )
 
     def update_lang_id(self, event):
-        print(self.selected_flag, flush=True)
-        self.lang_id = dict((v,k) for k,v in self.languages_dict.items())[self.selected_flag]
-        print(self.lang_id, flush=True)
+        #print(self.selected_flag, flush=True)
+        new_lang_id = dict((v,k) for k,v in self.languages_dict.items())[self.selected_flag]
+        
+        print("%s -> %s"%(self.lang_id, new_lang_id) , flush=True)
+
+        i18n.set_lang_id(new_lang_id)
+        self.lang_id = new_lang_id
+        
         
     @param.depends("lang_id")
     def test_markdown(self):
         return pn.pane.Markdown(f" ** this is a test in _markdown_ ** : {self.lang_id} {self.selected_flag}  {self.theme}")
 
+
     @param.depends("lang_id")
     def menu(self):
-
-        # return pn.pane.HTML("""<a href='/overview'>Overview</a><br />
-        # <a href='/page2'>Page 2</a><br />
-        # <a href='/page3'>Page 3</a><br />
-        # """)
-
-        # result = pn.Column(
-        #         pn.widgets.Button(name='Overview', button_type='primary', color='red'),
-        #         pn.widgets.Button(name='Page 2 ', button_type='primary', color='red'),
-        #         pn.widgets.Button(name='Page 3', button_type='primary', color='red'),                                
-        # )
-
-        result = pn.pane.HTML('''
-      <button class="mdc-button mdc-button--outlined">
-        <span class="mdc-button__ripple"></span>
-            <i class="material-icons mdc-button__icon" aria-hidden="true">bookmark</i>
-        <span class="mdc-button__label">Overview</span>
-        </button>
-''')
-
-        return result
+        return menu('overview')
 
 
 
     @param.depends("lang_id", "theme")
     def teams_chapter(self):
-        if self.lang_id == 'fr':
-            title = pn.pane.Markdown('''## Présentation des équipes ''')
-        else:
-            title = pn.pane.Markdown('''## Teams' presentation ''')
-
-        return pn.Column(title, 
-                            pn.pane.Markdown('''TODO '''),
-                            pn.pane.Markdown('''TODO '''),
+        
+        result = pn.Column( 
+                    pn.layout.spacer.VSpacer(height=15),
+                    pn.Row(
+                            pn.pane.PNG('https://upload.wikimedia.org/wikipedia/fr/3/32/UEFA_Euro_2020_logo.png', width=150),
+                            pn.layout.spacer.Spacer(width=1),
+                            pn.Column( #pn.pane.Markdown(f'''## {_('title_main')} '''), 
+                                            pn.pane.Markdown(_('intro_overview')),
+                                        sizing_mode='stretch_width'
+                                    ), 
+                        ),
+                        pn.layout.spacer.VSpacer(height=30),
+                         sizing_mode='stretch_width'
                     )
+        return result
 
     @param.depends("lang_id", "theme")
     def players_chapter(self):
@@ -129,65 +135,87 @@ class OverviewPage(param.Parameterized):
                                 ''' * 20, sizing_mode='stretch_width'
                                 )
 
+        #pn.layout.Divider(),
+        items = [  
+                    pn.pane.HTML("<br />"),
+                    pn.pane.Markdown(_('intro_positions_distribution'), ),
 
-        items = [  pn.layout.Divider(),
-                    pn.pane.Markdown('''## Présentation des Joueurs '''),
-                    pn.pane.Markdown('''Each team is allowed to select 26 players.  
-The way they have been selected is informative.  
-Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
-        
-                    pn.pane.Markdown(f'''### {_('title_positions_distribution')}'''),
                     pn.Row(pn.Spacer(width=50),
                         positions_distribution(self.full_df, self.lang_id, self.theme),
-                        bla
+                        positions_distribution_txt()
                     )
                 ]
 
+
         items += [
             pn.pane.HTML("<br />"*3),
-            pn.pane.Markdown(f'''### Dans quels championnats évoluent les joueurs sélectionnés ? '''),
-
+            pn.pane.Markdown(f'''### {_('countries_local_leagues_title')} '''),
+                # Seulement 5 teams over 24 have more than 50% of their players coming from their own league
             pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f'''Tout d'abord, regardons **quels pays** ont sélectionné principalement des joueurs **de leur propre ligue** ''')
+                    pn.pane.Markdown(f''' {_('countries_local_leagues_subtitle')} ''', 
+                    sizing_mode='stretch_width'),
             ),
             pn.Row(pn.Spacer(width=50),
+                countries_local_leagues_txt(),
                 countries_local_leagues(self.full_df, self.lang_id, self.theme),
-                bla
-            )
+             
+            ),
+            pn.pane.HTML("<br />"*2),
+            pn.pane.Markdown(f''' {_('countries_local_leagues_footer')}  '''),
+           
         ]
 
 
         items += [
-            pn.pane.HTML("<br />"*3),
+            pn.pane.HTML("<br />"),
             
+            pn.pane.Markdown(f'''### {_('leagues_distribution_per_team_title')} '''),
             pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f''' Maintenant regardons la répartition des ligues selon les équipes ''')
+                    pn.pane.Markdown(f'''{_('leagues_distribution_per_team_subtitle')} ''',
+                    sizing_mode='stretch_width',
+                    height=50),                    
             ),
-            pn.Row(pn.Spacer(width=50),
-                leagues_distribution(self.full_df, self.lang_id, self.theme),
-                bla
+            pn.Row(
+                leagues_distribution_per_team(self.full_df, self.lang_id, self.theme),
+                leagues_distribution_per_team_txt()
+            ),
+
+            pn.pane.HTML("<br />"),
+            pn.pane.Markdown(f'''{_('leagues_distribution_title')} '''),
+            pn.Row(
+                pn.Spacer(width=50), 
+                leagues_distribution_txt(),
+                leagues_distribution(self.full_df, self.theme),
+                
             )
         ]
 
         items += [
             pn.pane.HTML("<br />"*3),
-            pn.pane.Markdown(f'''### Clubs des joueurs sélectionnés ? '''),
+            pn.pane.Markdown(f'''### {_('countries_clubs_title')} '''),
 
             pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f'''Plus précis que les ligues, regardons dans quels **clubs** les joueurs sélectionnés évoluent''')
+                    pn.pane.Markdown(f''' {_('countries_clubs_subtitle')} ''', sizing_mode='stretch_width'),
+                    
             ),
             pn.Row(pn.Spacer(width=50),
-                countries_clubs(self.full_df, self.lang_id, self.theme),
-                #countries_clubs(self.full_df, self.lang_id, self.theme, False),
+                pn.Column(countries_clubs(self.full_df, self.lang_id, self.theme),
+                countries_clubs_txt())
+            ),
+            
+            pn.pane.HTML("<br />"),
+            pn.pane.Markdown(f'''{_('clubs_distribution_title')} '''),
+            pn.Row(pn.Spacer(width=50),
+                clubs_distribution_txt(),
+                clubs_distribution(self.full_df, self.theme)
             )
-
         ]
 
 
         items += [
             pn.pane.HTML("<br />"*3),
             pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f'''Pour avoir une meilleure vision de la répartition des clubs, sélectionnez votre équipe préférée''')
+                    pn.pane.Markdown(f''' {_('sankey_title')} ''')
             ),
             pn.Row(pn.Spacer(width=50),
                 sankey_ui(self.full_df, self.lang_id, self.theme)
@@ -210,7 +238,25 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
                  tabs_location='left'
                 )
             ),
+
+            pn.Row(pn.Spacer(width=50), 
+                    pn.pane.Markdown(f''' Nbr selections ''')
+            ),
+            pn.Row(pn.Spacer(width=50),
+             pn.Tabs( 
+                    ('Total', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections" ) ),
+                    ('Euro', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_euro") ),
+                    ('World Cup', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_wcup") ),
+                    
+                 tabs_location='left'
+                )
+               
+            )
+            
         ]
+
+
+
 
         items += [
             pn.pane.HTML("<br />"*3),
@@ -221,9 +267,11 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
             ),
             pn.Row(
                 pn.Tabs( 
-                    ('per age',    pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'age'))),
-                    ('per height', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'height') )),
-                    ('per weight', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'weight') )),
+                    ('age',    pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'age'))),
+                    ('height', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'height') )),
+                    ('weight', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'weight') )),
+                    ('selections', pn.Row(players_dim_per_country_per_position(self.full_df, self.lang_id, self.theme, 'nbr_selections') )),
+                    
                  tabs_location='left'
                 )
             ),
@@ -231,22 +279,7 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
 
             
 
-
-        #     pn.pane.HTML("<br />"*3),
-        #      pn.Row(pn.Spacer(width=50),
-        #         teams_average_age(self.full_df, self.lang_id, self.theme)
-        #     )
-        
-        # ] 
-        # - Joueurs : quelque fun facts
-        #     -  (06)
-        #     - Age (selon le poste ?)
-            
-        #     - Joueurs qui évoluent ensemble en club et qui s'affronteront en matchs
-        #     - Sankey reversed
-
-
-        result = pn.Column(objects=items)
+        result = pn.Column(objects=items, sizing_mode='stretch_width')
 
         return result
 
@@ -255,9 +288,9 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
     def main_view(self):
         
         if self.theme =='light':
-            theme = pn.template.MaterialTemplate(title='Euro 2020', )
+            theme = pn.template.MaterialTemplate(title=_('title_overview')  , )
         else:
-            theme = pn.template.MaterialTemplate(title='Euro 2020', 
+            theme = pn.template.MaterialTemplate(title=_('title_overview')  , 
                                                 theme=DarkTheme,
                                                 #main_max_width="1200px"
                                                 )
@@ -266,8 +299,14 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
 
         theme.header.append(
                 pn.Row(pn.layout.spacer.HSpacer(),
-                        pn.Row(self.flag_selector, 
-                                self.theme_selector, width=400)
+                        pn.Row( pn.pane.Markdown(_("last_update") ),
+                               
+                                pn.Column(pn.layout.spacer.VSpacer(height=1), 
+                                         self.flag_selector) , 
+
+                                #self.theme_selector, 
+                                
+                                width=400)
                      )
                       
         )
@@ -275,15 +314,15 @@ Let's see how each country has built more _offensive_ or _defensive_ teams.'''),
         
         theme.sidebar.append(self.menu)
 
-        theme.main.append(self.test_markdown)
+        #theme.main.append(self.test_markdown)
         theme.main.append(self.teams_chapter)
         theme.main.append(self.players_chapter)
           
         theme.main.append(pn.Spacer(height=30))
 
         theme.sidebar.append(pn.pane.HTML('''<script>
-          document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
-          </script>'''))
+         document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
+         </script>'''))
 
         return theme
 

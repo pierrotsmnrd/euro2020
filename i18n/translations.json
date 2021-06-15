@@ -7,8 +7,11 @@
 "dim_age" : {"fr":"Age",  "en":"Age"},
 "dim_country_code" : {"fr":"Equipe",  "en":"Team"},
 "dim_country_code_club" : {"fr":"Pays du club",  "en":"Club's country"},
+"dim_league_name" : {"fr":"Championnat",  "en":"League"},
 "dim_international_name_club" : {"fr":"Club",  "en":"Club"},
 "dim_group" : {"fr":"Groupe",  "en":"Group"},    
+"dim_nbr_selections" : {"fr":"Nombre de sélections",  "en":"Number of selections"},    
+"dim_total" : {"fr":"Total",  "en":"Total"},    
 
 "# Positions":{},
 "GOALKEEPER" : {"fr":"Gardien", "en":"Goalkeeper"},
@@ -32,6 +35,84 @@
 },
 "label_number" : {"fr":"Effectif", "en":"Number"}  ,
 "label_players" : {"fr":"Joueurs", "en":"Players"} ,
+
+
+"title_overview":{"fr":"UEFA Euro 2020 : Analyse et visualisation des joueurs",
+            "en":"UEFA Euro 2020 : Analysis and visualization of the players"},
+
+"intro_overview":{
+    "fr":"La **seizième édition** du **Championnat d'Europe de football** se déroule du 11 juin au 11 juillet 2021.\n\n**24 équipes nationales** réparties en 6 groupes de 4, jouent dans 11 stades européens.\n\nChaque équipe est autorisée à sélectionner **26 joueurs** (au lieu de 23 habituellement), soit un total de **624** joueurs d'horizons différents.",
+    "en":"The **16th European Football Championship** runs from 11 June to 11 July 2021.\n\n**24 national teams** spread into 6 groups of 4, play in 11 stadiums over Europe.\n\nEach team is allowed to select **26 players** (instead of the usual 23), that's **624** players with various background."
+},
+
+
 "title_positions_distribution" : {"fr":"Répartition des postes par équipe", 
-                                  "en":"Distribution of players' positions per team"}  
+                                  "en":"Distribution of players' positions per team"},  
+"intro_positions_distribution": {"fr":"La façon dont ils ont été sélectionnés est informative.\n\nRegardons comment chaque pays a constitué une équipe plus _offensive_ ou _défensive_.",
+"en":"The way they have been selected is informative. Let's see how each country has built more **offensive** or **defensive** teams."
+},
+
+
+"last_update":{"fr":"Dernière mise à jour : Juin 2021", "en":"Last update : June 2021"},
+
+"sort_by": {"fr":"Trier par :", "en":"Sort by :"},
+"ascending": {"fr":"Croissant", "en":"Ascending"},
+
+"countries_local_leagues_title":{"fr":"Seulement 5 pays sur 24 ont plus de 50% de leurs joueurs issus de leur championnat", 
+                                "en":"Only 5 countries on 24 have more than 50% of their players from their league"},
+
+
+"countries_local_leagues_subtitle":{"fr":"Regardons **quels pays** ont sélectionné principalement des joueurs **de leur propre ligue**.", 
+                                "en":"Let's see **which countries** have selected players mainly from **their own league**."},
+
+
+"countries_local_leagues_footer":{"fr":"Cela signifie-t-il que les championnats du haut de cette liste sont les plus populaires ?\nEst ce qu'il y beaucoup de joueurs des championnats italien, anglais et russe parmi les autres équipes ?", 
+                                "en":"Does this mean that the leagues from the top of this list are the most popular ?\nAre there a lot of players from the italian, english or russian ligues, in the other national teams ?"
+                                } ,                         
+
+
+"leagues_distribution_per_team_title":{"fr":"La _Premiere League_ Anglaise, largement représentée.", 
+                                        "en":"The English _Premiere League_, vastly represented."},
+
+
+"leagues_distribution_per_team_subtitle":{"fr":"Si on observe les championnats dont sont issus les joueurs pour chaque équipe nationale, le constat est flagrant :", 
+                                        "en":"If we look at the leagues from which the players are from, for each national team, the observation is obvious :"},
+
+
+"leagues_distribution_title":{"fr":"La sur-représentation du championnat anglais est encore plus flagrante quand on fait le total, toutes équipes nationales confondues : ", 
+                               "en":"The over-representation of the english league is even more blatant when we make the sum, all national teams combined :"},
+
+"leagues_distribution_plot_title" : {"fr":"2/3 des joueurs sont issus de seulement 6 championnats", 
+                                     "en":"2/3 of the players are from only 6 different leagues"},
+
+
+"countries_clubs_title":{   "fr":"Zoom sur les clubs", 
+                            "en":"Focus on the clubs"},
+
+"countries_clubs_subtitle":{   "fr":"Plus précis que les ligues, regardons dans quels **clubs** les joueurs appartiennent.", 
+                               "en":"More precise than the leagues, let's look at which **clubs** the players belong."},
+
+"countries_clubs_plot_title":{   "fr":"Clubs des joueurs", 
+                                  "en":"Players' clubs "},
+
+"countries_clubs_plot_title_extra":{   "fr":"(à partir de 3 joueurs d'un même club par équipe nationale)", 
+                                        "en":"(from 3 players from a club per national team)"
+                                },
+            
+"clubs_distribution_title":{
+    "fr":"Faisons la somme de tous les joueurs des clubs, tous pays confondus",
+    "en":"Let's make the sum of all the selected players from each club, regardless of the national team"
+},
+
+"clubs_distribution_plot_title":{
+    "fr":"Nombre de joueurs par club ( à partir de 6 joueurs sélectionnés par club )",
+    "en":"Number of players per club ( from 6 selected players per club ) "
+
+},
+
+
+"sankey_title":{   "fr":"Pour avoir une meilleure vision de la répartition des clubs, sélectionnez votre équipe préférée", 
+                    "en":""}
+
+
 }

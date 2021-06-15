@@ -34,9 +34,12 @@ def field_positions_colors():
 
 _lang_id = None
 def set_lang_id(lg_id):
+    print("SET LANG ! ", lg_id)
     global _lang_id
     _lang_id = lg_id
 
+def get_lang_id():
+    return _lang_id
 
 def _(x, translations_dict=None, lg_id=None):
     
@@ -50,3 +53,15 @@ def _(x, translations_dict=None, lg_id=None):
         return translations_dict[x][lg_id]
     else:
         return x
+
+
+
+def explanations(name):
+
+    print("EXPL ", name, _lang_id)
+
+    filepath = '../i18n/explanations/%s_%s.md'%(name, _lang_id)
+    f = open(filepath, 'r')
+    content = f.read()
+
+    return content

@@ -8,8 +8,12 @@ i18n.set_lang_id('en')
 
 
 full_df = None
+selections_df = None
 
-def load_full_df():
+def load_data():
+
+    global full_df
+    global selections
 
     players_df = pd.read_csv("../data/players.csv")
     clubs_df = pd.read_csv("../data/clubs.csv")
@@ -31,9 +35,28 @@ def load_full_df():
     full_df['country_name_club'] = full_df['country_code_club'].transform(lambda x:_(x, i18n.countries_translations() ) )
     full_df['country_flag_club'] = full_df['country_code_club'].transform(lambda x: _(x, i18n.countries_translations() , 'flag') )
 
+    full_df['league_name'] = full_df['country_code_club'].transform(lambda x:"%s %s" %(_(x, i18n.countries_translations(), 'league'), 
+                                                                                       _(x, i18n.countries_translations(), 'flag')) )
+
+
     full_df['group_hr'] = full_df['group'].transform(lambda x:"%s %s"%(_("dim_group"), x) )
 
-    return full_df
+
+    selections_df = pd.read_csv("../data/selections.csv")
+
+    selections_df = pd.read_csv("../data/selections.csv")
+
+    totals_df = selections_df[ selections_df['competition_name']=='total' ][['id', 'count']].rename(columns={'count':'nbr_selections'})
+    full_df = pd.merge(full_df, totals_df, on='id', how='outer')
+
+    totals_df_euro = selections_df[ selections_df['competition_name']=='European Championship' ][['id', 'count']].rename(columns={'count':'nbr_selections_euro'})
+    full_df = pd.merge(full_df, totals_df_euro, on='id', how='outer')
+
+    totals_df_wcup = selections_df[ selections_df['competition_name']=='FIFA World Cup' ][['id', 'count']].rename(columns={'count':'nbr_selections_wcup'})
+    full_df = pd.merge(full_df, totals_df_wcup, on='id', how='outer')
+
+
+
 
 
 def overview_page(**kwargs):
@@ -57,10 +80,11 @@ def overview_page(**kwargs):
 
 if __name__ == "__main__":
 
-    full_df = load_full_df()
+    load_data()
+    
 
     server = pn.serve({'/overview': overview_page, },
-                      title={'/overview': 'Euro 2020 : Overview'},
+                      title={'/overview': 'UEFA Euro 2020 Statistics'},
                       websocket_origin=["*"],
                       autoreload=True,
                       port=80,
