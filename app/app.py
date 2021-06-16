@@ -5,9 +5,14 @@ from about import AboutPage
 from matches import MatchesPage
 import pandas as pd
 import i18n
-from i18n import _
+import os
 
+from i18n import _
 i18n.set_lang_id('en')
+
+
+root_dname = os.path.dirname(os.path.abspath(__file__))
+os.chdir(root_dname)
 
 import holoviews as hv
 
@@ -122,7 +127,8 @@ if __name__ == "__main__":
                             
                       },
                       websocket_origin=["uefaeuro2020.herokuapp.com"],
-                      autoreload=True,
+                      #websocket_origin=["*"],
+                      #autoreload=True,
                       port=80,
                       threaded=True,
                       # check_unused_sessions=3,
