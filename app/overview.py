@@ -28,15 +28,6 @@ from pdb import set_trace as bp
 pd.options.plotting.backend = 'holoviews'
 
 
-
-css = '''
-.bk-root {
-    font-size:14px;
-}
-'''
-
-pn.extension(raw_css=[css])
-
 from panel.template import DarkTheme
 
 from plots import *
@@ -438,6 +429,7 @@ class OverviewPage(param.Parameterized):
          document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
          </script>'''))
 
+       
         return theme
 
 

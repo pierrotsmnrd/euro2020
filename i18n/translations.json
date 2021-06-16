@@ -92,8 +92,8 @@
 "sort_by": {"fr":"Trier par :", "en":"Sort by :"},
 "ascending": {"fr":"Croissant", "en":"Ascending"},
 
-"countries_local_leagues_title":{"fr":"Seulement 5 pays sur 24 ont plus de 50% de leurs joueurs issus de leur championnat", 
-                                "en":"Only 5 countries on 24 have more than 50% of their players from their league"},
+"countries_local_leagues_title":{"fr":"Seulement 5 équipes sur 24 ont plus de 50% de leurs joueurs issus de leur championnat national", 
+                                "en":"Only 5 teams out of 24 have more than 50% of their players from their national league"},
 
 "countries_local_leagues_subtitle":{"fr":"Regardons **quels pays** ont sélectionné principalement des joueurs **de leur propre ligue**.", 
                                 "en":"Let's see **which countries** have selected players mainly from **their own league**."},

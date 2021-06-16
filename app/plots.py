@@ -28,6 +28,23 @@ def sort_options():
             }
 
 
+def uses_noto():
+    return ("Windows" in pn.state.headers['User-Agent']) or ('windows' in pn.state.headers['User-Agent'])
+
+
+def fix_flags_hook(plot, element):
+    
+    if uses_noto():    
+        plot.handles['yaxis'].major_label_text_font = "noto"
+    
+
+    #for handle in plot.handles:
+    #    print(handle)
+    #    print( dir(plot.handles[handle]) )
+    #    print("\n")
+        
+
+
 def positions_distribution(full_df, lang_id, theme='light', sort="country_name", asc=True):
 
     sort_selector = pn.widgets.Select(
@@ -160,6 +177,7 @@ def positions_distribution_plot(full_df, lang_id, theme='light', sort="country_n
                   fontsize={'yticks': 10, 'xticks': 10},
                   toolbar=None,
                   default_tools=[],
+                  hooks=[fix_flags_hook]
                   ).redim.values(country_name=ordered_countries_names)
 
         if final_plot is None:
@@ -345,7 +363,7 @@ def leagues_distribution(full_df, theme='light'):
     align_on = "ENG"
     x_position = "%s %s" % (_(align_on, countries_translations(), 'league'), _(
         align_on, countries_translations(), 'flag'))
-    highlight_left = hv.VSpan(0, 6, alpha=0.5, ).opts(color='#636363', shared_axes=False, toolbar=None,
+    highlight_left = hv.VSpan(0, 6,).opts(color='#636363', shared_axes=False, toolbar=None,
                                                       default_tools=[],) * \
         hv.Text(x_position,
                 165, _('leagues_distribution_plot_67')).opts(color='#FFFFFF',
@@ -366,8 +384,6 @@ def leagues_distribution(full_df, theme='light'):
 
 
 def countries_clubs(full_df, lang_id, theme='light', full=False):
-
-    # bp()
 
     df_grouped_by = full_df.groupby(
         ["country_code", "international_name_club", "country_code_club"])
@@ -940,8 +956,8 @@ def players_max_selections_per_country(full_df, theme):
     labels = subdf.hvplot.labels(x='age_offset', y='nbr_selections_offset', text='country_flag',
                                  text_baseline='bottom',
                                  hover=False,
-                                 toolbar=None,
-                                 default_tools=[],
+                                 #toolbar=None,
+                                 #default_tools=[],
                                  )
 
     return scatter * labels

@@ -1,5 +1,5 @@
 import json
-
+import panel as pn
 
 _translations = None
 def translations():
@@ -32,14 +32,15 @@ def field_positions_colors():
 
 
 
-_lang_id = None
+
 def set_lang_id(lg_id):
     print("SET LANG ! ", lg_id)
-    global _lang_id
-    _lang_id = lg_id
+    pn.state.cookies['lg'] = lg_id
+    
+
 
 def get_lang_id():
-    return _lang_id
+    return pn.state.cookies['lg'] if 'lg' in pn.state.cookies else 'en'
 
 def _(x, translations_dict=None, lg_id=None):
     
@@ -47,7 +48,7 @@ def _(x, translations_dict=None, lg_id=None):
         translations_dict = translations()
         
     if lg_id is None:
-        lg_id = _lang_id
+        lg_id = get_lang_id()
         
     if x in translations_dict:
         return translations_dict[x][lg_id]
@@ -60,7 +61,7 @@ def explanations(name):
 
     #print("EXPL ", name, _lang_id)
 
-    filepath = '../i18n/explanations/%s_%s.md'%(name, _lang_id)
+    filepath = '../i18n/explanations/%s_%s.md'%(name, get_lang_id())
     f = open(filepath, 'r')
     content = f.read()
 
