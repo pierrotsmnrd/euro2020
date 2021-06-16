@@ -126,8 +126,8 @@ if __name__ == "__main__":
 
                             
                       },
-                      websocket_origin=["uefaeuro2020.herokuapp.com"],
-                      #websocket_origin=["*"],
+                      #websocket_origin=["uefaeuro2020.herokuapp.com"],
+                      websocket_origin=["*"],
                       #autoreload=True,
                       port=80,
                       threaded=True,
