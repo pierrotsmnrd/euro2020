@@ -981,7 +981,7 @@ def summed_selections_per_country(full_df, theme):
                 'value', ascending=asc)['country_name'].values
 
     plots_width = {
-        "Euro": 400,
+        "Euro": 430,
         "WorldCup": 250,
         "Friendly": 250,
         "Total": 300
