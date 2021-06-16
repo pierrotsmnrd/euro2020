@@ -1,6 +1,6 @@
 * **Every team** has selected at least **one player** from the **english league**, except *Russia*.
 
-* After the english _Premiere League, the **german, italian and spanish leagues** are among the most represented.
+* After the english _Premiere League_, the **german, italian and spanish leagues** are among the most represented.
 
 * We can notice that **Austria**, which has selected only 2 players from its league, selected **21 players** from the German _Bundesliga_.
 

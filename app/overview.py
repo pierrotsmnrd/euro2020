@@ -1,7 +1,7 @@
 
 from datetime import datetime as dt
 from threading import main_thread
-from bokeh.models.layouts import Spacer
+from bokeh.models.layouts import Column, Spacer
 from holoviews.core.util import one_to_one
 
 import pandas as pd
@@ -13,6 +13,7 @@ import panel as pn
 import hvplot.pandas  # noqa
 import holoviews as hv
 from bokeh.models import HoverTool
+from panel.pane.markup import Markdown
 import param
 
 import i18n
@@ -25,7 +26,7 @@ from pdb import set_trace as bp
 
 
 pd.options.plotting.backend = 'holoviews'
-#pn.config.sizing_mode = 'stretch_width'
+
 
 
 css = '''
@@ -40,6 +41,12 @@ from panel.template import DarkTheme
 
 from plots import *
 from explanations import *
+
+
+# helper
+def br(n=1):
+    return pn.pane.HTML("<br />"*n) 
+
 
 class OverviewPage(param.Parameterized):
 
@@ -118,26 +125,30 @@ class OverviewPage(param.Parameterized):
                     pn.Row(
                             pn.pane.PNG('https://upload.wikimedia.org/wikipedia/fr/3/32/UEFA_Euro_2020_logo.png', width=150),
                             pn.layout.spacer.Spacer(width=1),
-                            pn.Column( #pn.pane.Markdown(f'''## {_('title_main')} '''), 
-                                            pn.pane.Markdown(_('intro_overview')),
-                                        sizing_mode='stretch_width'
-                                    ), 
+                            br(2),
+                            pn.pane.Markdown(f'''## {_('title_overview')} 
+
+{_('intro_overview')}
+''', sizing_mode='stretch_width', min_height=200),
+
+                            
+                            
                         ),
-                        pn.layout.spacer.VSpacer(height=30),
-                         sizing_mode='stretch_width'
-                    )
-        return result
+                        #pn.layout.spacer.Spacer(height=1),
+                        sizing_mode='stretch_width',
+            )
+                    
+        return pn.Row(result,  sizing_mode='stretch_width')
 
     @param.depends("lang_id", "theme")
     def players_chapter(self):
 
-        bla = pn.pane.Markdown(''' blablablablabla blablablablablabla bla bla bla bla bla   
-                                ''' * 20, sizing_mode='stretch_width'
-                                )
+        #bla = pn.pane.Markdown(''' blablablablabla blablablablablabla bla bla bla bla bla   
+        #                        ''' * 20, sizing_mode='stretch_width'
+        #                        )
 
-        #pn.layout.Divider(),
-        items = [  
-                    pn.pane.HTML("<br />"),
+        
+        items = [   pn.pane.Markdown(f'''## {_('positions_distribution_title')} '''),
                     pn.pane.Markdown(_('intro_positions_distribution'), ),
 
                     pn.Row(pn.Spacer(width=50),
@@ -148,7 +159,7 @@ class OverviewPage(param.Parameterized):
 
 
         items += [
-            pn.pane.HTML("<br />"*3),
+            br(3),
             pn.pane.Markdown(f'''### {_('countries_local_leagues_title')} '''),
                 # Seulement 5 teams over 24 have more than 50% of their players coming from their own league
             pn.Row(pn.Spacer(width=50), 
@@ -160,14 +171,14 @@ class OverviewPage(param.Parameterized):
                 countries_local_leagues(self.full_df, self.lang_id, self.theme),
              
             ),
-            pn.pane.HTML("<br />"*2),
+            br(2),
             pn.pane.Markdown(f''' {_('countries_local_leagues_footer')}  '''),
            
         ]
 
 
         items += [
-            pn.pane.HTML("<br />"),
+            br(),
             
             pn.pane.Markdown(f'''### {_('leagues_distribution_per_team_title')} '''),
             pn.Row(pn.Spacer(width=50), 
@@ -180,7 +191,7 @@ class OverviewPage(param.Parameterized):
                 leagues_distribution_per_team_txt()
             ),
 
-            pn.pane.HTML("<br />"),
+            br(),
             pn.pane.Markdown(f'''{_('leagues_distribution_title')} '''),
             pn.Row(
                 pn.Spacer(width=50), 
@@ -191,7 +202,7 @@ class OverviewPage(param.Parameterized):
         ]
 
         items += [
-            pn.pane.HTML("<br />"*3),
+            br(3),
             pn.pane.Markdown(f'''### {_('countries_clubs_title')} '''),
 
             pn.Row(pn.Spacer(width=50), 
@@ -203,7 +214,7 @@ class OverviewPage(param.Parameterized):
                 countries_clubs_txt())
             ),
             
-            pn.pane.HTML("<br />"),
+            br(),
             pn.pane.Markdown(f'''{_('clubs_distribution_title')} '''),
             pn.Row(pn.Spacer(width=50),
                 clubs_distribution_txt(),
@@ -213,7 +224,7 @@ class OverviewPage(param.Parameterized):
 
 
         items += [
-            pn.pane.HTML("<br />"*3),
+            br(3),
             pn.Row(pn.Spacer(width=50), 
                     pn.pane.Markdown(f''' {_('sankey_title')} ''')
             ),
@@ -225,7 +236,109 @@ class OverviewPage(param.Parameterized):
 
 
         items += [
-            pn.pane.HTML("<br />"*3),
+           
+            br(3),
+            pn.Row(pn.Spacer(width=50), 
+                
+                pn.Column(
+                    pn.pane.Markdown(f'''## {_('selections_title')} '''),
+                    br(),
+                    pn.pane.Markdown(f''' {_('selections_subtitle_1')} ''', sizing_mode='stretch_width'),
+                    br(),
+                    pn.Row(players_max_selections_per_country_txt("max"), players_max_selections_per_country(self.full_df,  self.theme)),
+                    
+                    br(),
+                    pn.pane.Markdown(f''' {_('selections_subtitle_2')} ''', sizing_mode='stretch_width'),
+                    
+                    pn.Row(players_age_nbr_selections_ui(self.full_df,  self.theme, dim="nbr_selections" ), 
+                        
+                        pn.Column(
+                                br(3),
+                                players_max_selections_per_country_txt("all")
+                                )
+                        
+                        
+                        ),
+                    
+                    br(2),
+                    pn.pane.Markdown(f''' {_('selections_subtitle_3')} ''', sizing_mode='stretch_width'),
+                    br(),
+                    summed_selections_per_country(self.full_df, self.theme),
+                    br(),
+                    pn.pane.Markdown(f''' {_('selections_conclusion')} ''', sizing_mode='stretch_width'),
+
+                    
+
+                )
+            ),
+           
+        ]
+
+
+
+        items += [
+           
+            br(3),
+            pn.layout.Divider(),
+            pn.Row(pn.Spacer(width=50), 
+                
+                pn.Column(
+                    overview_footer(),
+                    br(), 
+                    
+                    sizing_mode='stretch_width'
+                )
+                
+                , sizing_mode='stretch_width'
+            )               
+        ]
+
+
+        result = pn.Column(objects=items, sizing_mode='stretch_width')
+
+        return result
+
+        #------------
+
+        #players_selections_title
+        #players_selections_subtitle
+
+
+        items += [
+            br(3),
+            pn.pane.Markdown(f'''### {_('players_selections_title')} '''),
+
+            pn.Row(pn.Spacer(width=50), 
+                    pn.pane.Markdown(f''' {_('players_selections_subtitle')} ''', sizing_mode='stretch_width'),
+                    
+            ),
+            
+           
+            pn.Tabs( 
+                    ('All championships', pn.Row(  players_age_nbr_selections(self.full_df,  self.theme, dim="nbr_selections" ),
+                                                  players_age_nbr_selections_txt("total")
+                                    ) 
+                    ),
+                    ('UEFA Euro', pn.Row(  players_age_nbr_selections(self.full_df,  self.theme, dim="nbr_selections_euro"),
+                                            players_age_nbr_selections_txt("euro")
+                                    ) 
+                    ),
+                    ('FIFA World Cup', pn.Row(  players_age_nbr_selections(self.full_df,  self.theme, dim="nbr_selections_wcup"),
+                                                 players_age_nbr_selections_txt("worldcup")
+                                        ) 
+                    ),
+                    tabs_location='left'             
+                )
+        
+        
+           ]
+
+
+
+        #------------
+
+        items += [
+            br(3),
             pn.pane.Markdown(f'''### {_('title_players_funfacts')}'''),
 
              pn.Row(pn.Spacer(width=50), 
@@ -243,14 +356,13 @@ class OverviewPage(param.Parameterized):
                     pn.pane.Markdown(f''' Nbr selections ''')
             ),
             pn.Row(pn.Spacer(width=50),
-             pn.Tabs( 
-                    ('Total', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections" ) ),
-                    ('Euro', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_euro") ),
-                    ('World Cup', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_wcup") ),
+            #  pn.Tabs( 
+            #         ('Total', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections" ) ),
+            #         ('Euro', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_euro") ),
+            #         ('World Cup', players_age_nbr_selections(self.full_df, self.lang_id, self.theme, dim="nbr_selections_wcup") ),
                     
-                 tabs_location='left'
-                )
-               
+            #      tabs_location='left'
+            #     )
             )
             
         ]
@@ -259,7 +371,7 @@ class OverviewPage(param.Parameterized):
 
 
         items += [
-            pn.pane.HTML("<br />"*3),
+            br(3),
             pn.pane.Markdown(f'''### {_('title_players_funfacts')}'''),
 
              pn.Row(pn.Spacer(width=50), 
@@ -284,21 +396,9 @@ class OverviewPage(param.Parameterized):
         return result
 
 
-
-    def main_view(self):
-        
-        if self.theme =='light':
-            theme = pn.template.MaterialTemplate(title=_('title_overview')  , )
-        else:
-            theme = pn.template.MaterialTemplate(title=_('title_overview')  , 
-                                                theme=DarkTheme,
-                                                #main_max_width="1200px"
-                                                )
-
-        #theme = pn.template.BootstrapTemplate(theme=DarkTheme)
-
-        theme.header.append(
-                pn.Row(pn.layout.spacer.HSpacer(),
+    @param.depends("lang_id")
+    def header(self):
+        return  pn.Row(pn.layout.spacer.HSpacer(),
                         pn.Row( pn.pane.Markdown(_("last_update") ),
                                
                                 pn.Column(pn.layout.spacer.VSpacer(height=1), 
@@ -308,8 +408,22 @@ class OverviewPage(param.Parameterized):
                                 
                                 width=400)
                      )
-                      
-        )
+
+
+    
+    def main_view(self):
+        
+        if self.theme =='light':
+            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020" , )
+        else:
+            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020"  , 
+                                                theme=DarkTheme,
+                                                #main_max_width="1200px"
+                                                )
+
+        #theme = pn.template.BootstrapTemplate(theme=DarkTheme)
+
+        theme.header.append(self.header)
 
         
         theme.sidebar.append(self.menu)

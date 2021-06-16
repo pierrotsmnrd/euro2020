@@ -1,5 +1,5 @@
-* The clubs of **Manchester City** and **Chelsea** have both 16 of their players selected in national teams
+* Les clubs de **Manchester City** et de **Chelsea** ont chacun 16 de leurs joueurs sélectionnés en équipes nationales
 
-* 3 out of the 5 most represented clubs are **English**, **Bayern München** on the 3rd place of the podium.
+* 3 des 5 clubs les plus représentés sont **anglais**, le **Bayern München** est à la troisième place du podium.
 
-* All the players from the 5 most represented clubs makes **11% of all the 624 players** of the Euro Championship.
+* Tous les joueurs des 5 clubs les plus représentés forment **11% des 624 joueurs** de cet Euro.

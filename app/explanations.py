@@ -39,3 +39,23 @@ def countries_clubs_txt():
 
 def clubs_distribution_txt():
     return pn.pane.Markdown(i18n.explanations('clubs_distribution'))
+
+
+def players_club_page_outro_txt():
+
+    return pn.pane.Markdown(i18n.explanations('players_club_page_outro'))
+
+def players_max_selections_per_country_txt(subtxt):
+
+    return pn.pane.Markdown(i18n.explanations(f'players_max_selections_per_country_{subtxt}'))
+
+
+
+def overview_footer():
+
+    return pn.pane.Markdown(i18n.explanations(f'overview_footer'), sizing_mode='stretch_width')
+
+
+def players_age_nbr_selections_txt(subtxt):
+    return "TODO" + i18n.explanations('clubs_distribution')
+    return pn.pane.Markdown(i18n.explanations(f'players_age_nbr_selections_{subtxt}'))

@@ -1,4 +1,15 @@
 {
+
+    "menu_overview":{  "fr":"Joueurs", 
+                       "en":"Players"
+                },
+    "menu_matches":{   "fr":"Matchs", 
+                       "en":"Matches"
+                },
+    "menu_about":{     "fr":"A propos", 
+                       "en":"About"
+                },
+
 "years_old":{"fr":"ans", "en":"years old"},
 "dim_height" : {"fr":"Taille (cm)", "en":"Height (cm)"},
 "dim_weight" : {"fr":"Poids (kg)",  "en":"Weight (cm)"},
@@ -10,8 +21,30 @@
 "dim_league_name" : {"fr":"Championnat",  "en":"League"},
 "dim_international_name_club" : {"fr":"Club",  "en":"Club"},
 "dim_group" : {"fr":"Groupe",  "en":"Group"},    
-"dim_nbr_selections" : {"fr":"Nombre de sélections",  "en":"Number of selections"},    
+"dim_nbr_selections" : {"fr":"Nombre de sélections",  "en":"Number of selections"},  
+"dim_nbr_selections_euro" : {"fr":"Nombre de sélections en Euro",  "en":"Number of selections in Euro Cup"},  
+"dim_nbr_selections_wcup" : {"fr":"Nombre de sélections en Coupe du Monde",  "en":"Number of selections in World Cup"},  
+
 "dim_total" : {"fr":"Total",  "en":"Total"},    
+"dim_number_selected_players":{"fr":"Nombre de joueurs sélectionnés", "en":"Number of selected players"},
+"dim_number_players":{"fr":"Nombre de joueurs", "en":"Number of players"},
+"dim_players":{"fr":"Joueurs", "en":"Players"},
+
+"from":{"fr":"De", "en":"From"},
+"to":{"fr":"Vers", "en":"To"},
+
+"match_category_Euro" : {  "fr":"Coupe d'Europe",
+                            "en":"Euro Cup"                        
+},
+"match_category_WorldCup" : {  "fr":"Coupe du Monde",
+                                "en":"World Cup"                        
+},
+"match_category_Friendly" : {  "fr":"Matchs amicaux",
+                                "en":"Friendly matches"                        
+},
+"match_category_Total" : {  "fr":"Total",
+                            "en":"Total"                        
+},
 
 "# Positions":{},
 "GOALKEEPER" : {"fr":"Gardien", "en":"Goalkeeper"},
@@ -45,11 +78,12 @@
     "en":"The **16th European Football Championship** runs from 11 June to 11 July 2021.\n\n**24 national teams** spread into 6 groups of 4, play in 11 stadiums over Europe.\n\nEach team is allowed to select **26 players** (instead of the usual 23), that's **624** players with various background."
 },
 
+"positions_distribution_title":{"fr":"Profils des joueurs", "en":"Players' profiles" },
 
-"title_positions_distribution" : {"fr":"Répartition des postes par équipe", 
+"positions_distribution_plot_title" : {"fr":"Répartition des postes par équipe", 
                                   "en":"Distribution of players' positions per team"},  
-"intro_positions_distribution": {"fr":"La façon dont ils ont été sélectionnés est informative.\n\nRegardons comment chaque pays a constitué une équipe plus _offensive_ ou _défensive_.",
-"en":"The way they have been selected is informative. Let's see how each country has built more **offensive** or **defensive** teams."
+"intro_positions_distribution": {"fr":"La façon dont les joueurs ont été sélectionnés est informative.\n\nRegardons comment chaque pays a constitué une équipe plus _offensive_ ou _défensive_.",
+"en":"The way the players have been selected is informative. Let's see how each country has built more **offensive** or **defensive** teams."
 },
 
 
@@ -61,10 +95,13 @@
 "countries_local_leagues_title":{"fr":"Seulement 5 pays sur 24 ont plus de 50% de leurs joueurs issus de leur championnat", 
                                 "en":"Only 5 countries on 24 have more than 50% of their players from their league"},
 
-
 "countries_local_leagues_subtitle":{"fr":"Regardons **quels pays** ont sélectionné principalement des joueurs **de leur propre ligue**.", 
                                 "en":"Let's see **which countries** have selected players mainly from **their own league**."},
 
+
+"countries_local_leagues_plot_title":{  "fr":"Nombre de joueurs sélectionnés dans la propre ligue du pays",
+                                        "en":"Number of player selected in own national league "
+                                    },
 
 "countries_local_leagues_footer":{"fr":"Cela signifie-t-il que les championnats du haut de cette liste sont les plus populaires ?\nEst ce qu'il y beaucoup de joueurs des championnats italien, anglais et russe parmi les autres équipes ?", 
                                 "en":"Does this mean that the leagues from the top of this list are the most popular ?\nAre there a lot of players from the italian, english or russian ligues, in the other national teams ?"
@@ -74,6 +111,9 @@
 "leagues_distribution_per_team_title":{"fr":"La _Premiere League_ Anglaise, largement représentée.", 
                                         "en":"The English _Premiere League_, vastly represented."},
 
+"leagues_distribution_per_team_plot_title":{"fr":"Répartition des ligues des joueurs",
+                                            "en":"Division of players' leagues"
+}, 
 
 "leagues_distribution_per_team_subtitle":{"fr":"Si on observe les championnats dont sont issus les joueurs pour chaque équipe nationale, le constat est flagrant :", 
                                         "en":"If we look at the leagues from which the players are from, for each national team, the observation is obvious :"},
@@ -84,6 +124,10 @@
 
 "leagues_distribution_plot_title" : {"fr":"2/3 des joueurs sont issus de seulement 6 championnats", 
                                      "en":"2/3 of the players are from only 6 different leagues"},
+
+"leagues_distribution_plot_67" : {"fr":"67% de tout\nles joueurs",  "en":"67% of all\nthe players"},
+
+"leagues_distribution_plot_33" : {"fr":"33% de tout les joueurs",  "en":"33% of all the players"},
 
 
 "countries_clubs_title":{   "fr":"Zoom sur les clubs", 
@@ -98,7 +142,8 @@
 "countries_clubs_plot_title_extra":{   "fr":"(à partir de 3 joueurs d'un même club par équipe nationale)", 
                                         "en":"(from 3 players from a club per national team)"
                                 },
-            
+        
+
 "clubs_distribution_title":{
     "fr":"Faisons la somme de tous les joueurs des clubs, tous pays confondus",
     "en":"Let's make the sum of all the selected players from each club, regardless of the national team"
@@ -112,7 +157,28 @@
 
 
 "sankey_title":{   "fr":"Pour avoir une meilleure vision de la répartition des clubs, sélectionnez votre équipe préférée", 
-                    "en":""}
+                    "en":"To have a better understanding of how clubs are represented, select your favorite team"},
 
+
+"selections_title" : {   
+                        "fr":"Experience des joueurs sélectionnés", 
+                        "en":"Selected players' experience"
+                    },
+"selections_subtitle_1" : {   
+                        "fr":"Certains joueurs ont déjà plus de 30 ans, et on accumulé beaucoup d'expérience en compétitions internationales.\nPour d'autres, c'est la toute première participation à un tel évènement.\n\nEn regardant le **nombre de sélection des joueurs** au début de la compétition, nous avons un bon indicateur de cet expérience.\n\nCommençons par regarder les joueurs les plus expérimentés de chaque pays : ", 
+                        "en":"Some players are in their mid 30s, and have accumulated lots of experience in international competitions.\nFor some others, it's their very first participation to such event.\n\nBy looking at the **number of selections of the players** before the championship starts, we have a good indicator of their experience.\n\nFirst, let's have a look to the most experimented players per country : "
+                    },
+"selections_subtitle_2" : {   
+                        "fr":"Est ce que cela signifie pour autant que le Portugal est l'équipe la plus expérimentée ? Pas si sûr.   \n\nRegardons l'expérience de tous les joueurs du Portugal - Vous pouvez aussi consulter l'expérience de votre équipe préférée", 
+                        "en":"Does this mean that Portugal is the most experienced team ? Not sure.   \n\nLet's look at the experience for all the players of Portugal - you can also have a look to your favorite team"
+                    },
+"selections_subtitle_3" : {   
+                        "fr":"Pour mieux comparer l'expérience de chaque équipe, faisons la somme du nombre de sélections de tous les joueurs de chaque équipe", 
+                        "en":"To better compare the experience of each team, let's make the sum of the selections of all the players of each team."
+                    },
+"selections_conclusion" : {   
+                        "fr":"- Les _Diables Rouges_ de Belgique est finalement l'équipe la plus expérimentée, tous types de compétitions confondues.\n\n- La France est le deuxième pays le plus expérimenté, toutes compétitions confondues, mais seulement 8ème pour les matches de Championnats d'Europe.", 
+                        "en":"- The _Red Devils_ of Belgium are actually the most experienced team, all kind of games considered.\n\n- France is the second most experience country, all kinds of games considered, but only 8th for the matches held in Euro Championships."
+                    }
 
 }

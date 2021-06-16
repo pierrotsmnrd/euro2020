@@ -1,5 +1,5 @@
-* Les clubs de **Manchester City** et de **Chelsea** ont chacun 16 de leurs joueurs sélectionnés en équipes nationales.
+* The **Manchester City** and **Chelsea** clubs both have **16** of their players selected in national teams.
 
-* 3 des 5 clubs les plus représentés sont **anglais**, le **Bayern München** est à la 3ème place.
+* 3 out of the 5 most represented clubs are **english**, **Bayern München** is 3rd
 
-* Tous les joueurs des 5 clubs les plus représentés forment **11% des 624 joueurs** de cet Euro 2020.
+* All the players from the 5 most represented clubs make up to **11% of the 624 players** of this UEFA Euro 2020 Championship.

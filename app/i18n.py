@@ -58,7 +58,7 @@ def _(x, translations_dict=None, lg_id=None):
 
 def explanations(name):
 
-    print("EXPL ", name, _lang_id)
+    #print("EXPL ", name, _lang_id)
 
     filepath = '../i18n/explanations/%s_%s.md'%(name, _lang_id)
     f = open(filepath, 'r')
