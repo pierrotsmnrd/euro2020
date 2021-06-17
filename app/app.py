@@ -31,6 +31,16 @@ css = '''
     font-size:14px;
 }
 
+
+@font-face {
+  font-family: 'babelstone';
+
+  src: url('/resources/BabelStoneFlags.woff2') format('woff2'),
+       url('/resources/BabelStoneFlags.woff') format('woff'),
+       url('/resources/BabelStoneFlags.ttf') format('truetype');
+
+}
+
 '''
 
 
@@ -50,6 +60,7 @@ pn.param.ParamMethod.loading_indicator = True
 
 full_df = None
 selections_df = None
+
 
 def load_data():
     global full_df 
@@ -107,24 +118,28 @@ def build_full_data():
 def get_lang_id():
 
 
-    cookies_lg = pn.state.cookies['lg'] if 'lg' in pn.state.cookies else None 
+    cache_lg = pn.state.cache['lg'] if 'lg' in pn.state.cache else None 
     params_lg = pn.state.session_args.get('lg')[0].decode('utf-8') if  'lg' in pn.state.session_args.keys() else None
 
-    
+    print(f"cache : {cache_lg} \t params _lg : {params_lg}")
 
-    if cookies_lg is None and params_lg is None:
-        pn.state.cookies['lg'] = 'en'
+    if cache_lg is not None and params_lg is None:
+        i18n.set_lang_id(pn.state.cache['lg'])
+        return pn.state.cache['lg']
+
+
+    if cache_lg is None and params_lg is None:
+        pn.state.cache['lg'] = 'en'
 
     elif params_lg in ['fr', 'en']:
-
-        pn.state.cookies['lg'] = params_lg
+        pn.state.cache['lg'] = params_lg
 
     else:
-        pn.state.cookies['lg'] = 'en'
+        pn.state.cache['lg'] = 'en'
 
-    i18n.set_lang_id(pn.state.cookies['lg'])
+    i18n.set_lang_id(pn.state.cache['lg'])
 
-    return pn.state.cookies['lg']
+    return pn.state.cache['lg']
 
 
 def uses_noto():
@@ -132,7 +147,48 @@ def uses_noto():
 
 # ---- Pages ---- 
 
+def session_create(p):
+
+    print('session created : ', p.id)
+    #pn.state.cookies['sid'] = p.id
+    #bp()
+
+def gotit(**kwargs):
+    print("GOTIT PAGE", pn.state.session_args)
+    pn.state.session_args['gotit'] = True
+    print("GOTIT DONE", pn.state.session_args)
+
 def overview_page(**kwargs):
+
+    print("OVERVIEW PAGE : ", pn.state.curdoc.session_context.id)
+    # bp()
+    
+
+    # print("session_info : ", pn.state.session_info, "\n")
+    # print("session_args : ", pn.state.session_args, "\n")
+    # print("cookies : ", pn.state.cookies, "\n")
+    # print("curdoc : ", pn.state.curdoc, "\n")
+
+    #bp()
+
+    if 'gotit' in pn.state.session_args:
+        del pn.state.session_args['gotit'] 
+
+    """
+    1) store in cache the asked page, 
+        delete the "gotit" key from cache
+
+    2) load page
+
+            
+
+            3) on callback of font loaded, 
+                    load("/gotit") -> stores {"gotit":True} in cache
+
+        
+
+    """
+
     component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
     return component.view()
     
@@ -171,22 +227,28 @@ def linkedin_page(**kwargs):
 
 if __name__ == "__main__":
 
+    # pprint(  [ (t, getattr( pn.state, t), ) for t in dir( pn.state) if  t.startswith("_") ])
+
     # build_full_data()
     load_data()
     
+    pn.state.on_session_created(session_create)
+
     server = pn.serve({ '/':overview_page,
                         '/overview': overview_page, 
                         '/linkedin':linkedin_page,
                         '/about':about_page, 
                         '/matches':matches_page,
                         '/test':test_page,
+                        '/gotit':gotit,
                     },
                       title={'/overview': 'UEFA Euro 2020 Statistics',
                             '/':'UEFA Euro 2020 Statistics',
                             '/linkedin':'LinkedIn Profile Pierre-Olivier Simonard',
                             '/about':'About',
                             '/matches':'Matches',
-                            '/test':'test'
+                            '/test':'test',
+                            '/gotit':'Nothing to seen here'
 
                             
                       },
@@ -195,9 +257,7 @@ if __name__ == "__main__":
                       autoreload=True,
                       port=int(os.getenv("PORT", 80)),
                       threaded=True,
-                      #static_dirs={'resources': '../resources'}
-
-
+                      static_dirs={'resources': '../resources'},
                       # check_unused_sessions=3,
                       # unused_session_lifetime=3
                       )

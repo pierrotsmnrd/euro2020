@@ -36,6 +36,8 @@ from blocks.common import br
 
 class OverviewPage(param.Parameterized):
 
+    received_gotit = param.Boolean(default=False)
+
     languages_dict = { 'fr':'🇫🇷', 'en':'🇬🇧/🇺🇸'}
     selected_flag = param.ObjectSelector(objects=list(languages_dict.values()), 
                                          default=languages_dict['en'])
@@ -45,7 +47,7 @@ class OverviewPage(param.Parameterized):
 
     theme = param.ObjectSelector(default="dark", objects=['light', 'dark'])
 
-    def __init__(self, full_df,  lang_id, theme='dark', ** params):
+    def __init__(self, full_df, lang_id, theme='dark', ** params):
 
         super(OverviewPage, self).__init__(**params)
 
@@ -53,8 +55,6 @@ class OverviewPage(param.Parameterized):
 
         # Params widgets
 
-        
-        
         self.lang_id = lang_id
 
         self.flag_selector = pn.widgets.Select.from_param(
@@ -103,9 +103,36 @@ class OverviewPage(param.Parameterized):
 
 
 
-    @param.depends("lang_id", "theme")
+    @param.depends("lang_id", "theme", "received_gotit")
     def teams_chapter(self):
-        
+        pn.pane.HTML('''  ''' )
+        if not self.received_gotit:
+            return pn.Row( pn.pane.HTML(color='#00aa41', width=100, height=100, loading=True),
+                            pn.widgets.Checkbox.from_param(self.param.received_gotit, 
+                                name="gotit",
+                                style={'visibility': "hidden", "background-color":"red"}
+                            ),
+                            pn.pane.HTML(''' <script> 
+                                            Array.from(document.getElementsByTagName('input')).forEach(function(item) {
+                                            if (item.nextSibling.innerHTML == 'gotit' ){
+                                                item.parentElement.style.visibility = 'hidden'
+                                            }
+                                            });</script>''' )
+                    )
+             
+
+        """
+    Array.from(document.getElementsByTagName('input')).forEach(function(item) {
+   if (item.nextSibling.innerHTML == 'gotit' ){
+       item.click()
+   }
+});
+
+            
+        """     
+    
+    
+
         result = pn.Column( 
                     pn.layout.spacer.VSpacer(height=15),
                     pn.Row(
@@ -126,27 +153,29 @@ class OverviewPage(param.Parameterized):
                     
         return pn.Row(result,  sizing_mode='stretch_width')
 
-    @param.depends("lang_id", "theme")
+    @param.depends("lang_id", "theme", "received_gotit")
     def players_chapter(self):
 
+        if not self.received_gotit:
+            return ""
+        
         items = []
 
-
         items += blocks.positions_distribution.items(self.full_df, self.theme)
-        # items += blocks.countries_local_leagues.items(self.full_df, self.theme)
-        # items+= blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
-        # items+= blocks.leagues_distribution.items(self.full_df, self.theme)
-        # items+= blocks.countries_clubs.items(self.full_df, self.theme)
-        # items+= blocks.clubs_distribution.items(self.full_df, self.theme)
-        # items+= blocks.clubs_distribution_per_team.items(self.full_df, self.theme)
-        # items+= blocks.players_max_selections_per_country.items(self.full_df, self.theme)
-        # items+= blocks.players_age_nbr_selections.items(self.full_df, self.theme)
-        # items+= blocks.summed_selections_per_country.items(self.full_df, self.theme)
+        items += blocks.countries_local_leagues.items(self.full_df, self.theme)
+        items+= blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
+        items+= blocks.leagues_distribution.items(self.full_df, self.theme)
+        items+= blocks.countries_clubs.items(self.full_df, self.theme)
+        items+= blocks.clubs_distribution.items(self.full_df, self.theme)
+        items+= blocks.clubs_distribution_per_team.items(self.full_df, self.theme)
+        items+= blocks.players_max_selections_per_country.items(self.full_df, self.theme)
+        items+= blocks.players_age_nbr_selections.items(self.full_df, self.theme)
+        items+= blocks.summed_selections_per_country.items(self.full_df, self.theme)
 
 
-       
+    
         items += [
-           
+        
             br(3),
             pn.layout.Divider(),
             pn.Row(pn.Spacer(width=50), 
@@ -164,26 +193,39 @@ class OverviewPage(param.Parameterized):
 
         result = pn.Column(objects=items, sizing_mode='stretch_width')
         return result
-       
+    
 
 
-    @param.depends("lang_id")
+    @param.depends("lang_id", "received_gotit")
     def header(self):
+
+        if not self.received_gotit:
+            return  pn.Row(pn.layout.spacer.HSpacer(),
+                            pn.Row( pn.pane.Markdown(_("last_update") ),
+                                 pn.Column(pn.layout.spacer.VSpacer(height=1), 
+                         ) , 
+                                    width=400)
+                        )
+
+        
         return  pn.Row(pn.layout.spacer.HSpacer(),
                         pn.Row( pn.pane.Markdown(_("last_update") ),
-                               
                                 pn.Column(pn.layout.spacer.VSpacer(height=1), 
-                                         self.flag_selector) , 
+                                        self.flag_selector) , 
 
-                                #self.theme_selector, 
-                                
                                 width=400)
-                     )
+                    )
+
+
+    def wait_for_gotit(self):
+        #print("wait for gotit", pn.state.session_args, self.received_gotit)
+        if "gotit" in pn.state.session_args:
+            self.received_gotit = True
 
 
     
-    def main_view(self):
-        
+    def view(self):
+          
         if self.theme =='light':
             theme = pn.template.MaterialTemplate(title="UEFA Euro 2020" , )
         else:
@@ -195,23 +237,22 @@ class OverviewPage(param.Parameterized):
         #theme = pn.template.BootstrapTemplate(theme=DarkTheme)
 
         theme.header.append(self.header)
-
-        
         theme.sidebar.append(self.menu)
 
         #theme.main.append(self.test_markdown)
         theme.main.append(self.teams_chapter)
         theme.main.append(self.players_chapter)
-          
+        
         theme.main.append(pn.Spacer(height=30))
 
-        theme.sidebar.append(pn.pane.HTML('''<script>
-         document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
-         </script>'''))
 
+        theme.sidebar.append(pn.pane.HTML('''<script>
+        document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
+        </script>'''))
+
+
+        pn.state.onload(self.wait_for_gotit)
+        pn.state.curdoc.add_periodic_callback(self.wait_for_gotit, 500)
        
         return theme
-
-
-    def view(self):
-        return self.main_view()
+        

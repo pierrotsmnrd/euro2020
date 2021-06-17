@@ -8,8 +8,11 @@ def uses_noto():
 
 def fix_flags_hook(plot, element):
     
+
+    #plot.handles['yaxis'].major_label_text_font = "'babelstone'"
+
     if uses_noto():    
-        plot.handles['yaxis'].major_label_text_font = "noto"
+        plot.handles['yaxis'].major_label_text_font = "babelstone" #"noto"
     
 
 
