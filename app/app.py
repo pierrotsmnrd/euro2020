@@ -31,17 +31,17 @@ css = '''
     font-size:14px;
 }
 
-@font-face {
-  font-family: 'noto';
-  src: url("resources/NotoColorEmoji.ttf") format("truetype");
-}
-
-
 '''
 
 
+# @font-face {
+#   font-family: 'noto';
+#   src: url("resources/NotoColorEmoji.ttf") format("truetype");
+# }
+
+
 pn.extension(raw_css=[css], 
-js_modules={"fontloader":'resources/FontLoader.js'},
+#js_modules={"fontloader":'resources/FontLoader.js'},
 loading_spinner='dots', loading_color='#00aa41')
 
 pn.param.ParamMethod.loading_indicator = True
@@ -195,7 +195,7 @@ if __name__ == "__main__":
                       autoreload=True,
                       port=int(os.getenv("PORT", 80)),
                       threaded=True,
-                      static_dirs={'resources': '../resources'}
+                      #static_dirs={'resources': '../resources'}
 
 
                       # check_unused_sessions=3,
