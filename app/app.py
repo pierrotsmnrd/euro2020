@@ -52,13 +52,16 @@ full_df = None
 selections_df = None
 
 def load_data():
+    global full_df 
 
-    global full_df
-    global selections
+    full_df = pd.read_csv("../app_data/full_df.csv")
+
+def build_full_data():
+
 
     players_df = pd.read_csv("../data/players.csv")
     clubs_df = pd.read_csv("../data/clubs.csv")
-
+    selections_df = pd.read_csv("../data/selections.csv")
 
     full_df = pd.merge(players_df, 
                     clubs_df,
@@ -83,7 +86,6 @@ def load_data():
     full_df['group_hr'] = full_df['group'].transform(lambda x:"%s %s"%(_("dim_group"), x) )
 
 
-    selections_df = pd.read_csv("../data/selections.csv")
 
     totals_df = selections_df[ selections_df['competition_name']=='total' ][['id', 'count']].rename(columns={'count':'nbr_selections'})
     full_df = pd.merge(full_df, totals_df, on='id', how='outer')
@@ -97,6 +99,8 @@ def load_data():
     totals_df_friendly = selections_df[ selections_df['competition_name']=='Friendly Matches' ][['id', 'count']].rename(columns={'count':'nbr_selections_friendly'})
     full_df = pd.merge(full_df, totals_df_friendly, on='id', how='outer')
 
+
+    full_df.to_csv("../app_data/full_df.csv", index=False)
 
 # ---- Helpers ---- 
 
@@ -167,9 +171,9 @@ def linkedin_page(**kwargs):
 
 if __name__ == "__main__":
 
+    # build_full_data()
     load_data()
     
-
     server = pn.serve({ '/':overview_page,
                         '/overview': overview_page, 
                         '/linkedin':linkedin_page,
