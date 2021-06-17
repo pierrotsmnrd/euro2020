@@ -133,18 +133,15 @@ class OverviewPage(param.Parameterized):
 
 
         items += blocks.positions_distribution.items(self.full_df, self.theme)
-        items += blocks.countries_local_leagues.items(self.full_df, self.theme)
-        
-       
-        items+= blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
-        items+= blocks.leagues_distribution.items(self.full_df, self.theme)
-        items+= blocks.countries_clubs.items(self.full_df, self.theme)
-        items+= blocks.clubs_distribution.items(self.full_df, self.theme)
-
-        items+= blocks.clubs_distribution_per_team.items(self.full_df, self.theme)
-        items+= blocks.players_max_selections_per_country.items(self.full_df, self.theme)
-        items+= blocks.players_age_nbr_selections.items(self.full_df, self.theme)
-        items+= blocks.summed_selections_per_country.items(self.full_df, self.theme)
+        # items += blocks.countries_local_leagues.items(self.full_df, self.theme)
+        # items+= blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
+        # items+= blocks.leagues_distribution.items(self.full_df, self.theme)
+        # items+= blocks.countries_clubs.items(self.full_df, self.theme)
+        # items+= blocks.clubs_distribution.items(self.full_df, self.theme)
+        # items+= blocks.clubs_distribution_per_team.items(self.full_df, self.theme)
+        # items+= blocks.players_max_selections_per_country.items(self.full_df, self.theme)
+        # items+= blocks.players_age_nbr_selections.items(self.full_df, self.theme)
+        # items+= blocks.summed_selections_per_country.items(self.full_df, self.theme)
 
 
        
