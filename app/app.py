@@ -1,10 +1,10 @@
 import panel as pn
 from param import Composite
-from overview import OverviewPage
-from about import AboutPage
-from preload import PreloadPage
-from matches import MatchesPage
-from test import TestPage
+from pages.overview import OverviewPage
+from pages.about import AboutPage
+from pages.matches import MatchesPage
+from pages.test import TestPage
+# from pages.preload import PreloadPage
 import pandas as pd
 import i18n
 import os
@@ -156,15 +156,13 @@ def linkedin_page(**kwargs):
     return component
 
 
-def preload_page(**kwargs):
-
-
-    if not uses_noto() or 'go' in pn.state.session_args:
-        component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
-        return component.view()
-    else:
-        component = PreloadPage()
-        return component.view()
+# def preload_page(**kwargs):
+#     if not uses_noto() or 'go' in pn.state.session_args:
+#         component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
+#         return component.view()
+#     else:
+#         component = PreloadPage()
+#         return component.view()
     
 
 if __name__ == "__main__":
@@ -172,7 +170,7 @@ if __name__ == "__main__":
     load_data()
     
 
-    server = pn.serve({ '/':preload_page, # overview_page,
+    server = pn.serve({ '/':overview_page,
                         '/overview': overview_page, 
                         '/linkedin':linkedin_page,
                         '/about':about_page, 

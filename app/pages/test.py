@@ -18,7 +18,7 @@ import param
 
 import i18n
 from i18n import _
-from menu import menu
+from pages.menu import menu
 
 from panel.template import DefaultTheme
 
@@ -31,8 +31,6 @@ pd.options.plotting.backend = 'holoviews'
 
 from panel.template import DarkTheme
 
-from plots import *
-from explanations import *
 
 
 

@@ -17,7 +17,7 @@ import param
 
 import i18n
 from i18n import _
-from menu import menu
+from pages.menu import menu
 
 from panel.template import DefaultTheme
 
@@ -30,12 +30,9 @@ pd.options.plotting.backend = 'holoviews'
 
 from panel.template import DarkTheme
 
-from plots import *
-from explanations import *
 
 
-
-class AboutPage(param.Parameterized):
+class MatchesPage(param.Parameterized):
 
     languages_dict = { 'fr':'🇫🇷', 'en':'🇬🇧/🇺🇸'}
     selected_flag = param.ObjectSelector(objects=list(languages_dict.values()), 
@@ -48,7 +45,7 @@ class AboutPage(param.Parameterized):
 
     def __init__(self, lang_id, theme='dark', ** params):
 
-        super(AboutPage, self).__init__(**params)
+        super(MatchesPage, self).__init__(**params)
 
         # Params widgets
         self.theme = theme
@@ -83,7 +80,7 @@ class AboutPage(param.Parameterized):
     @param.depends("lang_id", "theme")
     def main_chapter(self):
 
-        filepath = '../i18n/about_%s.md'%(self.lang_id)
+        filepath = '../i18n/wip_%s.md'%(self.lang_id)
         f = open(filepath, 'r')
         content = f.read()
 
