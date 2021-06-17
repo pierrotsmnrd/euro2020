@@ -45,7 +45,7 @@ def fix_flags_hook(plot, element):
         
 
 
-def positions_distribution(full_df, lang_id, theme='light', sort="country_name", asc=True):
+def positions_distribution(full_df, theme='light', sort="country_name", asc=True):
 
     sort_selector = pn.widgets.Select(
         name='',
@@ -56,18 +56,17 @@ def positions_distribution(full_df, lang_id, theme='light', sort="country_name",
     asc_cbox = pn.widgets.Checkbox(name=_('ascending'), value=True, width=80)
 
     plot = positions_distribution_plot(
-        full_df, lang_id, theme='light', sort="country_name", asc=True)
+        full_df, theme='light', sort="country_name", asc=True)
 
     bound_fn = pn.bind(positions_distribution_plot,
                        full_df=full_df,
-                       lang_id=lang_id,
                        theme=theme,
                        sort=sort_selector,
                        asc=asc_cbox
                        )
 
     result = pn.Column(
-        pn.Row(pn.pane.Markdown(f'''### {_('positions_distribution_plot_title', lg_id=lang_id)}''', sizing_mode='stretch_width'),
+        pn.Row(pn.pane.Markdown(f'''### {_('positions_distribution_plot_title')}''', sizing_mode='stretch_width'),
 
                pn.pane.Markdown(_('sort_by')),
                sort_selector,
@@ -78,13 +77,13 @@ def positions_distribution(full_df, lang_id, theme='light', sort="country_name",
     return result
 
 
-def positions_distribution_plot(full_df, lang_id, theme='light', sort="country_name", asc=True):
+def positions_distribution_plot(full_df, theme='light', sort="country_name", asc=True):
 
     counts = full_df.groupby(['country_code', 'field_position']) \
         .size().reset_index(name="count").sort_values(by="country_code", ascending=True)
 
     counts['country_name'] = counts['country_code'].transform(lambda x: "%s %s" % (
-        _(x, countries_translations(), lang_id), _(x, countries_translations(), 'flag')))
+        _(x, countries_translations()), _(x, countries_translations(), 'flag')))
 
     maxis = counts.groupby('field_position').max().rename(
         columns={'count': 'maxi'})
@@ -152,7 +151,7 @@ def positions_distribution_plot(full_df, lang_id, theme='light', sort="country_n
         df_for_p = pd.concat([count_serie, names_serie], axis=1).reset_index()
 
         df_for_p['country_name'] = df_for_p['country_code'].transform(lambda x: "%s %s" % (
-            _(x, countries_translations(), lang_id), _(x, countries_translations(), 'flag')))
+            _(x, countries_translations()), _(x, countries_translations(), 'flag')))
 
         df_for_p = df_for_p.set_index(['country_name', 'field_position']).sort_values(
             by="country_name", ascending=False)
@@ -190,7 +189,7 @@ def positions_distribution_plot(full_df, lang_id, theme='light', sort="country_n
     return final_plot
 
 
-def countries_local_leagues(full_df, lang_id, theme='light'):
+def countries_local_leagues(full_df, theme='light'):
 
     total_counts = full_df.groupby(["country_code"]).size().to_dict()
 
@@ -207,7 +206,7 @@ def countries_local_leagues(full_df, lang_id, theme='light'):
         lambda x: round(x['count'] / total_counts[x['country_code']] * 100, 1), axis=1)
 
     count_per_country_club['country_name'] = count_per_country_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id), _(x, countries_translations(), 'flag')))
+        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
 
     count_per_country_club = count_per_country_club.set_index('country_name')
 
@@ -224,7 +223,7 @@ def countries_local_leagues(full_df, lang_id, theme='light'):
     return chart
 
 
-def leagues_distribution_per_team(full_df, lang_id, theme='light'):
+def leagues_distribution_per_team(full_df, theme='light'):
 
     df_grouped_by = full_df.groupby(["country_code", "country_code_club"])
 
@@ -254,7 +253,7 @@ def leagues_distribution_per_team(full_df, lang_id, theme='light'):
         colormap[0] = "#2f2f2f"
 
     count_per_country_club['country_name'] = count_per_country_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id), _(x, countries_translations(), 'flag')))
+        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
     count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
         .transform(lambda x: "%s %s" % (_(x, countries_translations(),), _(x, countries_translations(), 'flag')))
 
@@ -383,7 +382,7 @@ def leagues_distribution(full_df, theme='light'):
                                                           default_tools=[],)
 
 
-def countries_clubs(full_df, lang_id, theme='light', full=False):
+def countries_clubs(full_df, theme='light', full=False):
 
     df_grouped_by = full_df.groupby(
         ["country_code", "international_name_club", "country_code_club"])
@@ -423,7 +422,7 @@ def countries_clubs(full_df, lang_id, theme='light', full=False):
         colormap[0] = "#2f2f2f"
 
     count_per_club['country_name'] = count_per_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id), _(x, countries_translations(), 'flag')))
+        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
     count_per_club['country_name_club'] = count_per_club['country_code_club'] \
         .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
 
@@ -631,7 +630,7 @@ def sankey_hook(plot, element):
             pass
 
 
-def sankey_for_country_code(country_code, sankey_full, lang_id, theme):
+def sankey_for_country_code(country_code, sankey_full,  theme):
 
     sankey_fr = pd.DataFrame(sankey_full[(sankey_full['source'] == country_code) | (
         sankey_full['source'].str.startswith(f'{country_code}_'))])
@@ -695,7 +694,7 @@ def sankey_for_country_code(country_code, sankey_full, lang_id, theme):
         * hv.Text(1000, 530, _('dim_international_name_club')).opts(color=text_color, toolbar=None, default_tools=[],)
 
 
-def sankey_ui(full_df, lang_id, theme='light'):
+def sankey_ui(full_df,  theme='light'):
 
     options_raw = list(full_df.groupby(
         ['country_name', 'country_flag', 'country_code']).groups.keys())
@@ -710,7 +709,6 @@ def sankey_ui(full_df, lang_id, theme='light'):
     bound_fn = pn.bind(sankey_for_country_code,
                        country_code=select,
                        sankey_full=build_sankey_full(full_df),
-                       lang_id=lang_id,
                        theme=theme)
 
     return pn.Column(
@@ -720,7 +718,7 @@ def sankey_ui(full_df, lang_id, theme='light'):
         bound_fn)
 
 
-def players_height_weight(full_df, lang_id, theme='light'):
+def players_height_weight(full_df, theme='light'):
 
     tooltips_raw = [
         (_('dim_international_name'), '@international_name'),
@@ -1038,7 +1036,7 @@ def summed_selections_per_country(full_df, theme):
     return final_plot
 
 
-def players_height_weight_per_country(full_df, lang_id, theme):
+def players_height_weight_per_country(full_df,  theme):
 
     tooltips_raw = [
         (_('dim_country_code'), '@country_name'),
@@ -1058,7 +1056,7 @@ def players_height_weight_per_country(full_df, lang_id, theme):
     df = pd.merge(df_left, df_right, how="outer",
                   on="country_code").sort_values('group_hr')
 
-    df['country_name'] = df['country_code'].transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id),
+    df['country_name'] = df['country_code'].transform(lambda x: "%s %s" % (_(x, countries_translations()),
                                                                            _(x, countries_translations(), 'flag'))
                                                       )
 
@@ -1144,14 +1142,14 @@ def players_height_weight_per_country(full_df, lang_id, theme):
     return result
 
 
-def legend_for_players_dim(lang_id):
+def legend_for_players_dim():
 
     field_positions = list(field_positions_colors().keys())
 
     df = pd.DataFrame({
         'x': [0, 1, 2, 3],
         'y': [0]*4,
-        'field_position': [_(x, lg_id=lang_id) for x in field_positions],
+        'field_position': [_(x) for x in field_positions],
         'color': [field_positions_colors()[x] for x in field_positions]
 
     })
@@ -1175,7 +1173,7 @@ def legend_for_players_dim(lang_id):
                                 )
 
 
-def players_dim_per_country_per_position(full_df, lang_id, theme, dimension='age'):
+def players_dim_per_country_per_position(full_df,  theme, dimension='age'):
 
     tooltips_raw = [
         (_('dim_international_name'), '@international_name'),
@@ -1195,7 +1193,7 @@ def players_dim_per_country_per_position(full_df, lang_id, theme, dimension='age
     df['color'] = df['field_position'].transform(
         lambda x: field_positions_colors()[x])
     df['country_name'] = df['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id),
+        .transform(lambda x: "%s %s" % (_(x, countries_translations()),
                                         _(x, countries_translations(), 'flag')))
 
     points = hv.Points(df, ['country_name', dimension],
@@ -1216,25 +1214,25 @@ def players_dim_per_country_per_position(full_df, lang_id, theme, dimension='age
                                   'minor_xgrid_line_color': 'lightgray',
                                   'xgrid_line_dash': [1, 4]},
                               shared_axes=False,
-                              ).redim.label(age=_('dim_age', lg_id=lang_id),
+                              ).redim.label(age=_('dim_age'),
                                             weight=_(
-                                  'dim_weight', lg_id=lang_id),
+                                  'dim_weight'),
         height=_(
-                                  'dim_height', lg_id=lang_id),
+                                  'dim_height'),
         country_name='Equipe')
 
-    legend = legend_for_players_dim(lang_id)
+    legend = legend_for_players_dim()
 
     return hv.Layout(legend + points).cols(1).opts(shared_axes=False,)
 
 
-def teams_average_age(full_df, lang_id, theme):
+def teams_average_age(full_df,  theme):
 
     mean_ages_df = pd.DataFrame(full_df.groupby("country_code")
                                 .mean()['age']
                                 .sort_values(ascending=True)).reset_index()
     mean_ages_df['country_name'] = mean_ages_df['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), lang_id),
+        .transform(lambda x: "%s %s" % (_(x, countries_translations()),
                                         _(x, countries_translations(), 'flag')))
 
     mean_ages_df = mean_ages_df.set_index('country_name')

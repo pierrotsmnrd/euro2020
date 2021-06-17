@@ -143,7 +143,7 @@ class OverviewPage(param.Parameterized):
                     pn.pane.Markdown(_('intro_positions_distribution'), ),
 
                     pn.Row(pn.Spacer(width=50),
-                        positions_distribution(self.full_df, self.lang_id, self.theme),
+                        positions_distribution(self.full_df, self.theme),
                         positions_distribution_txt()
                     )
                 ]
@@ -159,7 +159,7 @@ class OverviewPage(param.Parameterized):
             ),
             pn.Row(pn.Spacer(width=50),
                 countries_local_leagues_txt(),
-                countries_local_leagues(self.full_df, self.lang_id, self.theme),
+                countries_local_leagues(self.full_df, self.theme),
              
             ),
             br(2),
@@ -178,7 +178,7 @@ class OverviewPage(param.Parameterized):
                     height=50),                    
             ),
             pn.Row(
-                leagues_distribution_per_team(self.full_df, self.lang_id, self.theme),
+                leagues_distribution_per_team(self.full_df, self.theme),
                 leagues_distribution_per_team_txt()
             ),
 
@@ -201,7 +201,7 @@ class OverviewPage(param.Parameterized):
                     
             ),
             pn.Row(pn.Spacer(width=50),
-                pn.Column(countries_clubs(self.full_df, self.lang_id, self.theme),
+                pn.Column(countries_clubs(self.full_df, self.theme),
                 countries_clubs_txt())
             ),
             
@@ -220,7 +220,7 @@ class OverviewPage(param.Parameterized):
                     pn.pane.Markdown(f''' {_('sankey_title')} ''')
             ),
             pn.Row(pn.Spacer(width=50),
-                sankey_ui(self.full_df, self.lang_id, self.theme)
+                sankey_ui(self.full_df,  self.theme)
             )
 
         ]
