@@ -12,13 +12,13 @@ def store(store_name, obj_name, obj):
         pn.state.cache[store_name] = {}
 
     pn.state.cache[store_name][obj_name] = obj
-    print(f"stored {obj_name} in store {store_name}")
-
+    
+    if store_name == 'plots':
+        print(f"stored {obj_name} in store {store_name}")
 
 
 def restore(store_name, obj_name):
 
-    
     dump_file = f"../app_data/cache/{store_name}/{obj_name}.pickle"
     has_dump = os.path.isfile(dump_file)
 
@@ -30,12 +30,18 @@ def restore(store_name, obj_name):
         with open(dump_file, 'rb') as f:
             obj =  pickle.load(f)
             store(store_name, obj_name, obj)
-            print(f"restored {obj_name} from dump in {store_name}")
+            
+            if store_name == 'plots':
+                print(f"restored {obj_name} from dump in {store_name}")
+
             return obj
 
     elif is_cached:
         obj = pn.state.cache[store_name][obj_name]
-        print(f"restored {obj_name} from store {store_name}")
+        
+        if store_name == 'plots':
+            print(f"restored {obj_name} from store {store_name}")
+
         return obj
 
     return None
@@ -53,14 +59,10 @@ def dump(store_name):
 
 def cache_plot(name, plot):
     store('plots', name, plot)
-    pass
-
+    
 def get_plot(name):
-    restore('plots', name)
-    pass
-
-
-
+    return restore('plots', name)
+    
 def cache_data(name, data):
     store('data', name, data)
     
@@ -69,3 +71,4 @@ def get_data(name):
     
 def dump_data():
     dump('data')
+    dump('plots')
