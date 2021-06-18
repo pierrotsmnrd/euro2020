@@ -16,9 +16,6 @@ def positions_distribution_main(full_df, theme='light', sort="country_name", asc
 
     asc_cbox = pn.widgets.Checkbox(name=_('ascending'), value=True, width=80)
 
-    plot = positions_distribution_plot(
-        full_df, theme='light', sort="country_name", asc=True)
-
     bound_fn = pn.bind(positions_distribution_plot,
                        full_df=full_df,
                        theme=theme,
