@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, default_hovertool
+from .common import fix_flags_hook, br, default_hovertool, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
@@ -45,7 +45,7 @@ def players_max_selections_per_country_main(full_df, theme='light'):
         show_grid=True,
         toolbar="above",
         default_tools=[],
-        hooks=[fix_flags_hook],
+        #hooks=[fix_flags_hook],
 
     ) \
         .redim.label(
@@ -81,12 +81,10 @@ def players_max_selections_per_country_main(full_df, theme='light'):
     subdf.loc[subdf['country_code'] == 'ENG', "age_offset"] += 0.7
     subdf.loc[subdf['country_code'] == 'ENG', "nbr_selections_offset"] -= 5
 
-    labels = subdf.hvplot.labels(x='age_offset', y='nbr_selections_offset', text='country_flag',
-                                 text_baseline='bottom',
-                                 hover=False,
-                                 #toolbar=None,
-                                 #default_tools=[],
-                                 )
+    labels = hv.Labels(subdf, ['age_offset', 'nbr_selections_offset'], 'country_flag').opts( text_font='babelstone', # if uses_shitdows() else '', 
+                                                                                    text_baseline='bottom', 
+                                                                                    hooks=[fix_flags_hook]
+                                                                                    )
 
     return scatter * labels
 
