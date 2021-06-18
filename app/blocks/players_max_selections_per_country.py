@@ -1,3 +1,4 @@
+from functools import cache
 import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
@@ -7,11 +8,25 @@ import pandas as pd
 
 import holoviews as hv
 
+import os
+import cache_manager 
+
 
 def players_max_selections_per_country_main(full_df, theme='light'):
 
-    subdf = full_df.loc[full_df.groupby(['country_code'])[
-        "nbr_selections"].idxmax()]
+
+    plot_name = os.path.basename(__file__)[:-3] + f"_{theme}"
+
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
+
+        subdf = full_df.loc[full_df.groupby(['country_code'])[
+            "nbr_selections"].idxmax()]
+
+        cache_manager.cache_data(plot_name, subdf)
+    else:
+        subdf = plot_data
+
     scatter = subdf.hvplot.scatter(x='age_float',
                                    y='nbr_selections',
                                    c='field_position_color',

@@ -7,58 +7,74 @@ import pandas as pd
 
 import holoviews as hv
 
+import os
+import cache_manager 
+
 
 def countries_clubs_main(full_df, theme='light', full=False):
 
-    df_grouped_by = full_df.groupby(
-        ["country_code", "international_name_club", "country_code_club"])
 
-    count_per_club = df_grouped_by.size().reset_index(name="count")
+    plot_name = os.path.basename(__file__)[:-3] + f"_{theme}" + f"_{full}"
 
-    if not full:
-        # filter to keep only starting at 2 players in the club
-        count_per_club = count_per_club[count_per_club['count'] > 2]
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
 
-    colormap = hv.plotting.util.process_cmap('kgy')
 
-    if theme == 'dark':
-        # For pairs that have zero values (eg France selected zero player playing in Belgian league)
-        # we add a zero count ...
-        #all_pairs = list(df_grouped_by.groups.keys())
+        df_grouped_by = full_df.groupby(
+            ["country_code", "international_name_club", "country_code_club"])
 
-        coutries_from = full_df['country_code'].unique()
-        clubs_to = count_per_club[[
-            'international_name_club', 'country_code_club']].values
+        count_per_club = df_grouped_by.size().reset_index(name="count")
 
-        for c0 in coutries_from:
-            for c1 in clubs_to:
-                filter_c0 = count_per_club['country_code'] == c0
-                filter_c1 = count_per_club['international_name_club'] == c1[0]
+        if not full:
+            # filter to keep only starting at 2 players in the club
+            count_per_club = count_per_club[count_per_club['count'] > 2]
 
-                if len(count_per_club[(filter_c0) & (filter_c1)]) == 0:
-                    #print("adding : ")
-                    #print(c0, c1 )
-                    count_per_club = count_per_club.append({"country_code": c0,
-                                                            "international_name_club": c1[0],
-                                                            "country_code_club": c1[1],
-                                                            "count": 0}, ignore_index=True)
+        colormap = hv.plotting.util.process_cmap('kgy')
 
-        # ... and for value 0, we give a darkfgray color.
-        # otherwise it remains white, despite trying to set the bgcolor.
-        colormap[0] = "#2f2f2f"
+        if theme == 'dark':
+            # For pairs that have zero values (eg France selected zero player playing in Belgian league)
+            # we add a zero count ...
+            #all_pairs = list(df_grouped_by.groups.keys())
 
-    count_per_club['country_name'] = count_per_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
-    count_per_club['country_name_club'] = count_per_club['country_code_club'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
+            coutries_from = full_df['country_code'].unique()
+            clubs_to = count_per_club[[
+                'international_name_club', 'country_code_club']].values
 
-    count_per_club['international_name_club'] = count_per_club['international_name_club'] + " " + \
-        count_per_club['country_code_club'] \
-        .transform(lambda x: _(x, countries_translations(), 'flag'))
+            for c0 in coutries_from:
+                for c1 in clubs_to:
+                    filter_c0 = count_per_club['country_code'] == c0
+                    filter_c1 = count_per_club['international_name_club'] == c1[0]
 
-    yticks_sorted = sorted(list(count_per_club[['international_name_club', 'country_name_club']]
-                                .groupby(['international_name_club', 'country_name_club']).groups.keys()), key=lambda x: x[1])
-    yticks_sorted = [t[0] for t in yticks_sorted]
+                    if len(count_per_club[(filter_c0) & (filter_c1)]) == 0:
+                        #print("adding : ")
+                        #print(c0, c1 )
+                        count_per_club = count_per_club.append({"country_code": c0,
+                                                                "international_name_club": c1[0],
+                                                                "country_code_club": c1[1],
+                                                                "count": 0}, ignore_index=True)
+
+            # ... and for value 0, we give a darkfgray color.
+            # otherwise it remains white, despite trying to set the bgcolor.
+            colormap[0] = "#2f2f2f"
+
+        count_per_club['country_name'] = count_per_club['country_code'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+        count_per_club['country_name_club'] = count_per_club['country_code_club'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
+
+        count_per_club['international_name_club'] = count_per_club['international_name_club'] + " " + \
+            count_per_club['country_code_club'] \
+            .transform(lambda x: _(x, countries_translations(), 'flag'))
+
+        yticks_sorted = sorted(list(count_per_club[['international_name_club', 'country_name_club']]
+                                    .groupby(['international_name_club', 'country_name_club']).groups.keys()), key=lambda x: x[1])
+        yticks_sorted = [t[0] for t in yticks_sorted]
+
+        cache_manager.cache_data(plot_name, (count_per_club, yticks_sorted, colormap))
+    else:
+
+        count_per_club, yticks_sorted, colormap = plot_data
+
 
     heatmap = count_per_club.hvplot.heatmap(
         x='international_name_club',

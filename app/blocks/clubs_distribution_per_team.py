@@ -7,6 +7,9 @@ import pandas as pd
 
 import holoviews as hv
 
+import os
+import cache_manager
+
 _sankey_full_singleton = None
 
 
@@ -15,7 +18,6 @@ def build_sankey_full(full_df):
     global _sankey_full_singleton
     if _sankey_full_singleton is None:
 
-        
         # First, build the data where :
         # - source is the club's country (country_code_club)
         # - destination is the club's name (display_official_name)
@@ -128,13 +130,24 @@ def sankey_hook(plot, element):
 
 def sankey_for_country_code(country_code, sankey_full,  theme):
 
-    sankey_df = pd.DataFrame(sankey_full[(sankey_full['source'] == country_code) | (
-        sankey_full['source'].str.startswith(f'{country_code}_'))])
 
-    
+    plot_name = os.path.basename(__file__)[:-3] + f"_{country_code}"
 
-    nbr_leagues = sankey_df.loc[ sankey_df['source_type'] == 'league', 'source' ].nunique()
-    nbr_clubs = sankey_df.loc[ sankey_df['source_type'] == 'league', 'destination' ].nunique()
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
+        
+
+        sankey_df = pd.DataFrame(sankey_full[(sankey_full['source'] == country_code) | (
+            sankey_full['source'].str.startswith(f'{country_code}_'))])
+
+        nbr_leagues = sankey_df.loc[ sankey_df['source_type'] == 'league', 'source' ].nunique()
+        nbr_clubs = sankey_df.loc[ sankey_df['source_type'] == 'league', 'destination' ].nunique()
+
+        cache_manager.cache_data(plot_name, (sankey_df, nbr_leagues, nbr_clubs))
+
+    else:
+        (sankey_df, nbr_leagues, nbr_clubs) = plot_data
+
 
     # Build a list of colors to give as colormap for the Sankey, to get around a bug
     # that prevents using a column as color dimension

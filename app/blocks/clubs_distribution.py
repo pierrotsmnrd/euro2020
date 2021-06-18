@@ -7,17 +7,34 @@ import pandas as pd
 
 import holoviews as hv
 
+import os
+import cache_manager 
 
 
 def clubs_distribution_main(full_df, theme='light', full=False):
 
-    count_per_club = full_df.groupby(["international_name_club", "country_code_club"]).size(
-    ).reset_index(name="count").sort_values('count', ascending=False)
-    count_per_club = count_per_club[count_per_club['count'] > 5]
 
-    count_per_club['international_name_club'] = count_per_club['international_name_club'] + "-" + \
-        count_per_club['country_code_club'].transform(
-            lambda x: _(x, countries_translations(), 'flag'))
+
+    plot_name = os.path.basename(__file__)[:-3]
+
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None:
+
+        count_per_club = full_df.groupby(["international_name_club", "country_code_club"]).size(
+        ).reset_index(name="count").sort_values('count', ascending=False)
+        count_per_club = count_per_club[count_per_club['count'] > 5]
+
+        count_per_club['international_name_club'] = count_per_club['international_name_club'] + "-" + \
+            count_per_club['country_code_club'].transform(
+                lambda x: _(x, countries_translations(), 'flag'))
+
+
+        cache_manager.cache_data(plot_name, count_per_club)
+
+
+    else:
+        count_per_club = plot_data
+
 
     result = count_per_club.hvplot.bar(x='international_name_club',
                                        y='count',

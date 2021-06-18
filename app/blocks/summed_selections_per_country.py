@@ -1,3 +1,4 @@
+from re import A
 import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
@@ -7,7 +8,11 @@ import pandas as pd
 
 import holoviews as hv
 
-def summed_selections_per_country_main(full_df, theme, sort="total", asc=True):
+import os
+import cache_manager 
+from pdb import set_trace as bp
+
+def summed_selections_per_country_main(full_df, theme, sort_key="total", asc=True):
 
 
     options = sort_options(field_positions=False, championships=True)
@@ -24,7 +29,7 @@ def summed_selections_per_country_main(full_df, theme, sort="total", asc=True):
     bound_fn = pn.bind(summed_selections_per_country_plot,
                        full_df=full_df,
                        theme=theme,
-                       sort=sort_selector,
+                       sort_key=sort_selector,
                        asc=asc_cbox
                        )
 
@@ -39,43 +44,56 @@ def summed_selections_per_country_main(full_df, theme, sort="total", asc=True):
     return result
 
 
-def summed_selections_per_country_plot(full_df, theme, sort="Total", asc=True):
-
-    print(sort, asc)
+def summed_selections_per_country_plot(full_df, theme, sort_key="Total", asc=True):
 
     options = sort_options(field_positions=False, championships=True)
 
-    sum_sel_df = full_df.groupby(['country_name', 'country_flag']).sum()[['nbr_selections', 'nbr_selections_euro', 'nbr_selections_wcup', 'nbr_selections_friendly']]\
-        .reset_index()\
-        .sort_values('nbr_selections', ascending=False)
 
-    sum_sel_df = sum_sel_df.rename(columns={
-        'nbr_selections': 'Total',
-        'nbr_selections_euro': 'Euro',
-        'nbr_selections_wcup': 'WorldCup',
-        'nbr_selections_friendly': 'Friendly',
-    }
-    )
+    plot_name = os.path.basename(__file__)[:-3] + f"_{theme}_{sort_key}_{asc}"
 
-    sum_sel_df['country_name'] = sum_sel_df['country_name'] + \
-        sum_sel_df['country_flag']
-    sum_sel_df = sum_sel_df.melt(id_vars=['country_name'], value_vars=[
-                                 'Total', 'Euro', 'WorldCup', 'Friendly']).sort_values('value', ascending=True)
-    sum_sel_df.set_index(['country_name', 'variable'])
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
 
-    # default
-    #ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == 'Total'].sort_values(
-    #    'value', ascending=not asc)['country_name'].values
+            
+        sum_sel_df = full_df.groupby(['country_name', 'country_flag']).sum()[['nbr_selections', 'nbr_selections_euro', 'nbr_selections_wcup', 'nbr_selections_friendly']]\
+            .reset_index()\
+            .sort_values('nbr_selections', ascending=False)
 
-    if sort not in options:
-        sort = options[-1]  # 'Total'
-    else:
-        sort = options[sort]
+        sum_sel_df = sum_sel_df.rename(columns={
+            'nbr_selections': 'Total',
+            'nbr_selections_euro': 'Euro',
+            'nbr_selections_wcup': 'WorldCup',
+            'nbr_selections_friendly': 'Friendly',
+        }
+        )
+
+        sum_sel_df['country_name'] = sum_sel_df['country_name'] + \
+            sum_sel_df['country_flag']
+        sum_sel_df = sum_sel_df.melt(id_vars=['country_name'], value_vars=[
+                                    'Total', 'Euro', 'WorldCup', 'Friendly']).sort_values('value', ascending=True)
+        sum_sel_df.set_index(['country_name', 'variable'])
+
+        if sort_key not in options:
+            sort_key = options[-1]  # 'Total'
+        else:
+            sort_key = options[sort_key]
         
-    # we use this to reorder using redim.values
-    if sort != "country_name":
-        ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == sort].sort_values(
-            'value', ascending=not asc)['country_name'].values
+        
+        # we use this to reorder using redim.values
+        if sort_key == "country_name":
+            ordered_countries_names = sum_sel_df['country_name'].sort_values(ascending=not asc).unique()
+
+        else:
+            ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == sort_key].sort_values(
+                'value', ascending=not asc)['country_name'].values
+
+        cache_manager.cache_data(plot_name, (sum_sel_df, ordered_countries_names))
+
+
+    else:
+
+        sum_sel_df, ordered_countries_names =  plot_data
+
 
     plots_width = {
         "Euro": 430,

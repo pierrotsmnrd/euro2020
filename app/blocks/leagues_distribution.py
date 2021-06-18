@@ -8,15 +8,32 @@ import pandas as pd
 import holoviews as hv
 
 
+import os
+import cache_manager 
+
+
 def leagues_distribution_main(full_df, theme='light'):
 
-    count_per_country_club = full_df.groupby(["country_code_club"]).size(
-    ).reset_index(name="count").sort_values('count', ascending=False)
 
-    #count_per_country_club = count_per_country_club[  count_per_country_club['count'] >= 10 ]
+    plot_name = os.path.basename(__file__)[:-3] + f"_{theme}"
 
-    count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
+
+        count_per_country_club = full_df.groupby(["country_code_club"]).size(
+        ).reset_index(name="count").sort_values('count', ascending=False)
+
+        #count_per_country_club = count_per_country_club[  count_per_country_club['count'] >= 10 ]
+
+        count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
+
+        cache_manager.cache_data(plot_name, count_per_country_club)
+
+
+    else:
+        count_per_country_club = plot_data
+
 
     main = count_per_country_club.hvplot.bar(x='country_name_club',
                                              y='count',

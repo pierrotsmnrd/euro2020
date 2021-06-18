@@ -7,49 +7,64 @@ import pandas as pd
 
 import holoviews as hv
 
+import os
+import cache_manager 
+
 def leagues_distribution_per_team_main(full_df, theme='light'):
 
 
-    df_grouped_by = full_df.groupby(["country_code", "country_code_club"])
 
-    count_per_country_club = df_grouped_by.size().reset_index(name="count")
+    plot_name = os.path.basename(__file__)[:-3] + f"_{theme}"
 
-    colormap = hv.plotting.util.process_cmap('kgy')
+    plot_data = cache_manager.get_data(plot_name)
 
-    if theme == 'dark':
-        # For pairs that have zero values (eg France selected zero player playing in Belgian league)
-        # we add a zero count ...
-        all_pairs = list(df_grouped_by.groups.keys())
+    if plot_data is None : 
 
-        coutries_from = list(set([c[0] for c in all_pairs]))
-        coutries_to = list(set([c[1] for c in all_pairs]))
+        df_grouped_by = full_df.groupby(["country_code", "country_code_club"])
 
-        for c0 in coutries_from:
-            for c1 in coutries_to:
-                filter_c0 = count_per_country_club['country_code'] == c0
-                filter_c1 = count_per_country_club['country_code_club'] == c1
+        count_per_country_club = df_grouped_by.size().reset_index(name="count")
 
-                if len(count_per_country_club[(filter_c0) & (filter_c1)]) == 0:
-                    count_per_country_club = count_per_country_club.append(
-                        {"country_code": c0, "country_code_club": c1, "count": 0}, ignore_index=True)
+        colormap = hv.plotting.util.process_cmap('kgy')
 
-        # ... and for value 0, we give a darkfgray color.
-        # otherwise it remains white, despite trying to set the bgcolor.
-        colormap[0] = "#2f2f2f"
+        if theme == 'dark':
+            # For pairs that have zero values (eg France selected zero player playing in Belgian league)
+            # we add a zero count ...
+            all_pairs = list(df_grouped_by.groups.keys())
 
-    count_per_country_club['country_name'] = count_per_country_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
-    count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(),), _(x, countries_translations(), 'flag')))
+            coutries_from = list(set([c[0] for c in all_pairs]))
+            coutries_to = list(set([c[1] for c in all_pairs]))
 
-    count_per_country_club['league_name'] = count_per_country_club['country_code_club'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
-    count_per_country_club['country_flag'] = count_per_country_club['country_code'] \
-        .transform(lambda x: _(x, countries_translations(), 'flag'))
+            for c0 in coutries_from:
+                for c1 in coutries_to:
+                    filter_c0 = count_per_country_club['country_code'] == c0
+                    filter_c1 = count_per_country_club['country_code_club'] == c1
 
-    # count_per_country_club =count_per_country_club \
-    #                                 .sort_values(by="country_name_club", ascending=False) \
-    #                                 .sort_values(by="country_name", ascending=False)
+                    if len(count_per_country_club[(filter_c0) & (filter_c1)]) == 0:
+                        count_per_country_club = count_per_country_club.append(
+                            {"country_code": c0, "country_code_club": c1, "count": 0}, ignore_index=True)
+
+            # ... and for value 0, we give a darkfgray color.
+            # otherwise it remains white, despite trying to set the bgcolor.
+            colormap[0] = "#2f2f2f"
+
+        count_per_country_club['country_name'] = count_per_country_club['country_code'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+        count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations(),), _(x, countries_translations(), 'flag')))
+
+        count_per_country_club['league_name'] = count_per_country_club['country_code_club'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
+        count_per_country_club['country_flag'] = count_per_country_club['country_code'] \
+            .transform(lambda x: _(x, countries_translations(), 'flag'))
+
+        # count_per_country_club =count_per_country_club \
+        #                                 .sort_values(by="country_name_club", ascending=False) \
+        #                                 .sort_values(by="country_name", ascending=False)
+
+        cache_manager.cache_data(plot_name, (colormap, count_per_country_club))
+    else:
+        colormap, count_per_country_club = plot_data
+        
 
     main_heatmap = count_per_country_club.hvplot.heatmap(y='country_name',
                                                          x='league_name',

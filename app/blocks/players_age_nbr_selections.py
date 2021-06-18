@@ -7,6 +7,7 @@ import pandas as pd
 
 import holoviews as hv
 
+
 def players_age_nbr_selections_main(full_df, theme='light', dim="nbr_selections",):
 
     options_raw = list(full_df.groupby(
@@ -35,9 +36,12 @@ def players_age_nbr_selections_main(full_df, theme='light', dim="nbr_selections"
 
 def players_age_nbr_selections_plot(full_df, theme='light', dim="nbr_selections", country_code=None):
 
+    # doesn't require much caching on the data here
+
     df = full_df
     if country_code is not None:
         df = full_df[full_df["country_code"] == country_code]
+
 
     scatter = df.hvplot.scatter(x='age_float',
                                 y=dim,

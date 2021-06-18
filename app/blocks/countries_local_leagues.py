@@ -5,27 +5,40 @@ from bokeh.models import HoverTool
 from .common import fix_flags_hook, br
 import pandas as pd
 
+import os
+import cache_manager 
+
 
 def countries_local_leagues_main(full_df, theme='light'):
 
-    total_counts = full_df.groupby(["country_code"]).size().to_dict()
+    plot_name = os.path.basename(__file__)[:-3]
 
-    # Which national teams rely the most on their local leagues?
+    plot_data = cache_manager.get_data(plot_name)
+    if plot_data is None : 
+            
 
-    #count_per_country_club = full_df.groupby(["country_code", "country_code_club"]).count()['jersey_number'].reset_index().rename(columns={"jersey_number":"count"})
-    count_per_country_club = full_df.groupby(
-        ["country_code", "country_code_club"]).size().reset_index(name="count")
+        total_counts = full_df.groupby(["country_code"]).size().to_dict()
 
-    count_per_country_club = count_per_country_club.loc[count_per_country_club['country_code'] == count_per_country_club['country_code_club'], [
-        "country_code", "count"]].sort_values(by="count", ascending=True)
+        # Which national teams rely the most on their local leagues?
 
-    count_per_country_club['percentage'] = count_per_country_club.apply(
-        lambda x: round(x['count'] / total_counts[x['country_code']] * 100, 1), axis=1)
+        #count_per_country_club = full_df.groupby(["country_code", "country_code_club"]).count()['jersey_number'].reset_index().rename(columns={"jersey_number":"count"})
+        count_per_country_club = full_df.groupby(
+            ["country_code", "country_code_club"]).size().reset_index(name="count")
 
-    count_per_country_club['country_name'] = count_per_country_club['country_code'] \
-        .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+        count_per_country_club = count_per_country_club.loc[count_per_country_club['country_code'] == count_per_country_club['country_code_club'], [
+            "country_code", "count"]].sort_values(by="count", ascending=True)
 
-    count_per_country_club = count_per_country_club.set_index('country_name')
+        count_per_country_club['percentage'] = count_per_country_club.apply(
+            lambda x: round(x['count'] / total_counts[x['country_code']] * 100, 1), axis=1)
+
+        count_per_country_club['country_name'] = count_per_country_club['country_code'] \
+            .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+
+        count_per_country_club = count_per_country_club.set_index('country_name')
+
+        cache_manager.cache_data(plot_name, count_per_country_club)
+    else:
+        count_per_country_club = plot_data
 
     chart = count_per_country_club.hvplot.barh("country_name", "count", height=600, color='count', cmap='kgy') \
         .opts(labelled=[],
