@@ -19,6 +19,7 @@ import param
 import i18n
 from i18n import _
 from pages.menu import menu
+from blocks.common import uses_shitdows
 
 from panel.template import DefaultTheme
 
@@ -61,10 +62,14 @@ class OverviewPage(param.Parameterized):
             self.param.selected_flag,
             name="", #_('Language'),
             value=self.languages_dict[lang_id],
-            width=80
+            width=80,
+            css_classes=[ 'fix_shitdows'] if uses_shitdows() else []
             )
 
-        self.flag_selector_watcher = self.flag_selector.param.watch(self.update_lang_id, ['value'], onlychanged=False)
+        self.flag_selector_watcher = self.flag_selector.param.watch(self.update_lang_id, ['value'], 
+                                        onlychanged=False,
+
+        )
 
         # self.flag_selector.jscallback(value='''
         #     window.location = location.href.split("?")[0] + "?lg=" + languages_dict[select.value] 
@@ -107,30 +112,69 @@ class OverviewPage(param.Parameterized):
     def teams_chapter(self):
         pn.pane.HTML('''  ''' )
         if not self.received_gotit:
-            return pn.Row( pn.pane.HTML(color='#00aa41', width=100, height=100, loading=True),
-                            pn.widgets.Checkbox.from_param(self.param.received_gotit, 
+
+            checkbox =  pn.widgets.Checkbox.from_param(self.param.received_gotit, 
                                 name="gotit",
-                                style={'visibility': "hidden", "background-color":"red"}
-                            ),
-                            pn.pane.HTML(''' <script> 
-                                            Array.from(document.getElementsByTagName('input')).forEach(function(item) {
-                                            if (item.nextSibling.innerHTML == 'gotit' ){
-                                                item.parentElement.style.visibility = 'hidden'
+                                style={'visibility': "hidden", "background-color":"red"},
+                                css_classes=['gotit-hide']
+                            )
+
+            hide_checkbox = pn.pane.HTML(''' <script> 
+                            Array.from(document.getElementsByTagName('input')).forEach(function(item) {
+                            if (item.nextSibling.innerHTML == 'gotit' ){
+                                item.parentElement.style.visibility = 'hidden'
+                            }
+                            });</script>''')
+
+            trigger_on_fonts_loaded = pn.pane.HTML(''' <script> 
+                                            
+                                var fired = false;
+
+                                var fontLoader = new FontLoader(["babelstone"], {
+                                    "fontLoaded": function(font) {
+                                            // One of the fonts was loaded
+                                            console.log("font loaded: " + font.family);
+                                    },
+                                    "complete": function(error) {
+                                        if (error !== null) {
+                                            // Reached the timeout but not all fonts were loaded
+                                            console.log(error.message);
+                                            console.log(error.notLoadedFonts);
+                                        } else {
+                                            // All fonts were loaded
+                                            console.log("all fonts were loaded");
+
+                                            if ( !fired) {
+
+                                                Array.from(document.getElementsByTagName('input')).forEach(function(item) {
+                                                    if (item.nextSibling.innerHTML == 'gotit' ){
+                                                        item.click()
+                                                        item.remove();
+                                                        fired = true;
+                                                    }
+                                                });
+
+
                                             }
-                                            });</script>''' )
+                                            
+
+                                        }
+                                    }
+                                }, 10000);
+                                fontLoader.loadFonts();
+                                            
+                                            
+                                            </script>''' )
+
+
+            return pn.Row( pn.pane.HTML( width=100, height=100, loading=True),
+                            checkbox, 
+                            #hide_checkbox,
+                            trigger_on_fonts_loaded,
+                            
                     )
              
 
-        """
-    Array.from(document.getElementsByTagName('input')).forEach(function(item) {
-   if (item.nextSibling.innerHTML == 'gotit' ){
-       item.click()
-   }
-});
-
-            
-        """     
-    
     
 
         result = pn.Column( 

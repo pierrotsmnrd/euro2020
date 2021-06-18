@@ -31,6 +31,9 @@ css = '''
     font-size:14px;
 }
 
+.gotit-hide {
+    visibility:hidden;
+}
 
 @font-face {
   font-family: 'babelstone';
@@ -41,18 +44,29 @@ css = '''
 
 }
 
+
+.fix_shitdows {
+    font-family: babelstone !important;
+    text-color:red;
+}
+
+.fix_shitdows select {
+    font-family: babelstone !important;
+    text-color:red;
+}
+
+.fix_shitdows option {
+    font-family: babelstone !important;
+    text-color:red;
+}
+
 '''
 
 
-# @font-face {
-#   font-family: 'noto';
-#   src: url("resources/NotoColorEmoji.ttf") format("truetype");
-# }
-
-
 pn.extension(raw_css=[css], 
-#js_modules={"fontloader":'resources/FontLoader.js'},
-loading_spinner='dots', loading_color='#00aa41')
+            js_modules={"fontloader":'resources/FontLoader.js'}, #https://github.com/smnh/FontLoader
+            loading_spinner='dots', 
+            loading_color='#00aa41')
 
 pn.param.ParamMethod.loading_indicator = True
 #----
@@ -147,47 +161,10 @@ def uses_noto():
 
 # ---- Pages ---- 
 
-def session_create(p):
-
-    print('session created : ', p.id)
-    #pn.state.cookies['sid'] = p.id
-    #bp()
-
-def gotit(**kwargs):
-    print("GOTIT PAGE", pn.state.session_args)
-    pn.state.session_args['gotit'] = True
-    print("GOTIT DONE", pn.state.session_args)
 
 def overview_page(**kwargs):
 
     print("OVERVIEW PAGE : ", pn.state.curdoc.session_context.id)
-    # bp()
-    
-
-    # print("session_info : ", pn.state.session_info, "\n")
-    # print("session_args : ", pn.state.session_args, "\n")
-    # print("cookies : ", pn.state.cookies, "\n")
-    # print("curdoc : ", pn.state.curdoc, "\n")
-
-    #bp()
-
-    if 'gotit' in pn.state.session_args:
-        del pn.state.session_args['gotit'] 
-
-    """
-    1) store in cache the asked page, 
-        delete the "gotit" key from cache
-
-    2) load page
-
-            
-
-            3) on callback of font loaded, 
-                    load("/gotit") -> stores {"gotit":True} in cache
-
-        
-
-    """
 
     component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
     return component.view()
@@ -216,31 +193,17 @@ def linkedin_page(**kwargs):
     return component
 
 
-# def preload_page(**kwargs):
-#     if not uses_noto() or 'go' in pn.state.session_args:
-#         component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
-#         return component.view()
-#     else:
-#         component = PreloadPage()
-#         return component.view()
-    
-
 if __name__ == "__main__":
-
-    # pprint(  [ (t, getattr( pn.state, t), ) for t in dir( pn.state) if  t.startswith("_") ])
 
     # build_full_data()
     load_data()
     
-    pn.state.on_session_created(session_create)
-
     server = pn.serve({ '/':overview_page,
                         '/overview': overview_page, 
                         '/linkedin':linkedin_page,
                         '/about':about_page, 
                         '/matches':matches_page,
                         '/test':test_page,
-                        '/gotit':gotit,
                     },
                       title={'/overview': 'UEFA Euro 2020 Statistics',
                             '/':'UEFA Euro 2020 Statistics',
@@ -248,8 +211,6 @@ if __name__ == "__main__":
                             '/about':'About',
                             '/matches':'Matches',
                             '/test':'test',
-                            '/gotit':'Nothing to seen here'
-
                             
                       },
                       #websocket_origin=["uefaeuro2020.herokuapp.com"],
