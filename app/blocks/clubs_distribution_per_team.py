@@ -7,8 +7,6 @@ import pandas as pd
 
 import holoviews as hv
 
-
-
 _sankey_full_singleton = None
 
 
@@ -17,7 +15,7 @@ def build_sankey_full(full_df):
     global _sankey_full_singleton
     if _sankey_full_singleton is None:
 
-        # bp()
+        
         # First, build the data where :
         # - source is the club's country (country_code_club)
         # - destination is the club's name (display_official_name)
@@ -60,6 +58,8 @@ def build_sankey_full(full_df):
             "league_name": "destination_lib"
         })
 
+        left_part['source_type'] = 'country'
+
         left_part = pd.merge(left_part,
                              names_serie,
                              how='outer',
@@ -84,7 +84,7 @@ def build_sankey_full(full_df):
             "league_name": "source_lib",
             "display_official_name": "destination"
         })
-
+        right_part['source_type'] = 'league'
         right_part = pd.merge(right_part,
                               names_serie,
                               how='outer',
@@ -128,21 +128,26 @@ def sankey_hook(plot, element):
 
 def sankey_for_country_code(country_code, sankey_full,  theme):
 
-    sankey_fr = pd.DataFrame(sankey_full[(sankey_full['source'] == country_code) | (
+    sankey_df = pd.DataFrame(sankey_full[(sankey_full['source'] == country_code) | (
         sankey_full['source'].str.startswith(f'{country_code}_'))])
+
+    
+
+    nbr_leagues = sankey_df.loc[ sankey_df['source_type'] == 'league', 'source' ].nunique()
+    nbr_clubs = sankey_df.loc[ sankey_df['source_type'] == 'league', 'destination' ].nunique()
 
     # Build a list of colors to give as colormap for the Sankey, to get around a bug
     # that prevents using a column as color dimension
-    if len(sankey_fr['source'].unique()) > len(hv.Cycle.default_cycles['default_colors']):
+    if len(sankey_df['source'].unique()) > len(hv.Cycle.default_cycles['default_colors']):
         base_cmap = hv.Cycle.default_cycles['default_colors'] * 2
     else:
         base_cmap = hv.Cycle.default_cycles['default_colors']
 
-    colormap = list(base_cmap[: len(sankey_fr["source"].unique())])
-    color_dict = dict(zip(sankey_fr['source'].unique()[1:], colormap[1:]))
+    colormap = list(base_cmap[: len(sankey_df["source"].unique())])
+    color_dict = dict(zip(sankey_df['source'].unique()[1:], colormap[1:]))
 
-    for node in sankey_fr['source'].unique()[1:]:
-        nbr_variations = len(sankey_fr[sankey_fr['source'] == node])
+    for node in sankey_df['source'].unique()[1:]:
+        nbr_variations = len(sankey_df[sankey_df['source'] == node])
 
         # The more variations in color,
         # the smaller the offset in each variation
@@ -163,7 +168,7 @@ def sankey_for_country_code(country_code, sankey_full,  theme):
         hooks = [fix_flags_hook]
         text_color = 'black'
 
-    sankey = hv.Sankey(sankey_fr,
+    sankey = hv.Sankey(sankey_df,
                        ["source_lib", "destination_lib"],
                        vdims=[hv.Dimension("volume"), hv.Dimension("players")],
                        ).opts(width=1200,
@@ -184,10 +189,10 @@ def sankey_for_country_code(country_code, sankey_full,  theme):
                                             volume=_('dim_number_players'),
                                             players=_('dim_players'))
 
-    result =  sankey 
-        # * hv.Text(0+35, 530, _('dim_country_code')).opts(color=text_color, toolbar=None, default_tools=[],) \
-        # * hv.Text(500, 530, _('dim_league_name')).opts(color=text_color, toolbar=None, default_tools=[],) \
-        # * hv.Text(1000, 530, _('dim_international_name_club')).opts(color=text_color, toolbar=None, default_tools=[],)
+    result =  sankey \
+        * hv.Text(0+35, 530, _('dim_country_code')).opts(color=text_color, toolbar=None, default_tools=[],) \
+        * hv.Text(500, 530, f'{nbr_leagues} ' + _('dim_league_name_plural')   ).opts(color=text_color, toolbar=None, default_tools=[],) \
+        * hv.Text(1000, 530, f'{nbr_clubs} ' + _('dim_international_name_club_plural')  ).opts(color=text_color, toolbar=None, default_tools=[],)
 
 
     return result

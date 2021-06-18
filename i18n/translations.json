@@ -19,7 +19,10 @@
 "dim_country_code" : {"fr":"Equipe",  "en":"Team"},
 "dim_country_code_club" : {"fr":"Pays du club",  "en":"Club's country"},
 "dim_league_name" : {"fr":"Championnat",  "en":"League"},
+"dim_league_name_plural" : {"fr":"Championnats",  "en":"Leagues"},
+
 "dim_international_name_club" : {"fr":"Club",  "en":"Club"},
+"dim_international_name_club_plural" : {"fr":"Clubs",  "en":"Clubs"},
 "dim_group" : {"fr":"Groupe",  "en":"Group"},    
 "dim_nbr_selections" : {"fr":"Nombre de sélections",  "en":"Number of selections"},  
 "dim_nbr_selections_euro" : {"fr":"Nombre de sélections en Euro",  "en":"Number of selections in Euro Cup"},  
@@ -158,7 +161,6 @@
 
 "sankey_title":{   "fr":"Pour avoir une meilleure vision de la répartition des clubs, sélectionnez votre équipe préférée", 
                     "en":"To have a better understanding of how clubs are represented, select your favorite team"},
-
 
 "selections_title" : {   
                         "fr":"Experience des joueurs sélectionnés", 
