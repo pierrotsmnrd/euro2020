@@ -110,21 +110,14 @@ class OverviewPage(param.Parameterized):
 
     @param.depends("lang_id", "theme", "received_gotit")
     def teams_chapter(self):
-        pn.pane.HTML('''  ''' )
+        
         if not self.received_gotit:
 
             checkbox =  pn.widgets.Checkbox.from_param(self.param.received_gotit, 
                                 name="gotit",
-                                style={'visibility': "hidden", "background-color":"red"},
                                 css_classes=['gotit-hide']
                             )
 
-            hide_checkbox = pn.pane.HTML(''' <script> 
-                            Array.from(document.getElementsByTagName('input')).forEach(function(item) {
-                            if (item.nextSibling.innerHTML == 'gotit' ){
-                                item.parentElement.style.visibility = 'hidden'
-                            }
-                            });</script>''')
 
             trigger_on_fonts_loaded = pn.pane.HTML(''' <script> 
                                             
@@ -169,7 +162,6 @@ class OverviewPage(param.Parameterized):
 
             return pn.Row( pn.pane.HTML( width=100, height=100, loading=True),
                             checkbox, 
-                            #hide_checkbox,
                             trigger_on_fonts_loaded,
                             
                     )
@@ -261,11 +253,6 @@ class OverviewPage(param.Parameterized):
                     )
 
 
-    def wait_for_gotit(self):
-        #print("wait for gotit", pn.state.session_args, self.received_gotit)
-        if "gotit" in pn.state.session_args:
-            self.received_gotit = True
-
 
     
     def view(self):
@@ -295,8 +282,6 @@ class OverviewPage(param.Parameterized):
         </script>'''))
 
 
-        pn.state.onload(self.wait_for_gotit)
-        pn.state.curdoc.add_periodic_callback(self.wait_for_gotit, 500)
-       
+        
         return theme
         
