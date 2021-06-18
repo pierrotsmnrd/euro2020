@@ -4,6 +4,7 @@ from pages.overview import OverviewPage
 from pages.about import AboutPage
 from pages.matches import MatchesPage
 from pages.test import TestPage
+import cache_manager
 import pandas as pd
 import i18n
 import os
@@ -175,6 +176,11 @@ def clear_page(**kwargs):
     print("cache cleared ", pn.state.cache)
     return ""
 
+def dump_page(**kwargs):
+
+    cache_manager.dump_data()
+
+
 
 def test_page(**kwargs):
     component = TestPage(lang_id=get_lang_id(), go='go' in pn.state.session_args)
@@ -202,6 +208,7 @@ if __name__ == "__main__":
                         '/matches':matches_page,
                         '/test':test_page,
                         '/clear':clear_page,
+                        '/dump':dump_page
                     },
                       title={'/overview': 'UEFA Euro 2020 Statistics',
                             '/':'UEFA Euro 2020 Statistics',
@@ -210,6 +217,7 @@ if __name__ == "__main__":
                             '/matches':'Matches',
                             '/test':'test',
                             '/clear':'clear',
+                            '/dump':'dump',
                             
                       },
                       #websocket_origin=["uefaeuro2020.herokuapp.com"],
