@@ -96,7 +96,7 @@ def players_max_selections_per_country_main(full_df, theme='light'):
     subdf.loc[subdf['country_code'] == 'ENG', "age_offset"] += 0.7
     subdf.loc[subdf['country_code'] == 'ENG', "nbr_selections_offset"] -= 5
 
-    labels = hv.Labels(subdf, ['age_offset', 'nbr_selections_offset'], 'country_flag').opts( text_font='babelstone', # if uses_shitdows() else '', 
+    labels = hv.Labels(subdf, ['age_offset', 'nbr_selections_offset'], 'country_flag').opts( text_font='babelstone' if uses_shitdows() else '', 
                                                                                     text_baseline='bottom', 
                                                                                     hooks=[fix_flags_hook]
                                                                                     )

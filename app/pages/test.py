@@ -19,7 +19,7 @@ import param
 import i18n
 from i18n import _
 from pages.menu import menu
-
+from blocks.common import uses_shitdows
 from panel.template import DefaultTheme
 
 from pdb import set_trace as bp
@@ -60,7 +60,8 @@ class TestPage(param.Parameterized):
             self.param.selected_flag,
             name="", #_('Language'),
             value=self.languages_dict[lang_id],
-            width=80
+            width=80,
+            css_classes=[ 'fix_shitdows'] if uses_shitdows() else []
             )
 
         self.flag_selector_watcher = self.flag_selector.param.watch(self.update_lang_id, ['value'], onlychanged=False)

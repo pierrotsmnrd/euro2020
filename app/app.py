@@ -4,7 +4,6 @@ from pages.overview import OverviewPage
 from pages.about import AboutPage
 from pages.matches import MatchesPage
 from pages.test import TestPage
-# from pages.preload import PreloadPage
 import pandas as pd
 import i18n
 import os
@@ -44,6 +43,12 @@ css = '''
 
 }
 
+/*
+@font-face {
+    font-family: 'noto';
+    src: url("resources/NotoEmoji-Regular.ttf") format("truetype");
+}*/
+
 
 .fix_shitdows {
     font-family: babelstone !important;
@@ -68,7 +73,7 @@ pn.extension(raw_css=[css],
             loading_spinner='dots', 
             loading_color='#00aa41')
 
-#pn.param.ParamMethod.loading_indicator = True
+pn.param.ParamMethod.loading_indicator = True
 
 
 #----

@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, default_hovertool
+from .common import fix_flags_hook, br, default_hovertool, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
@@ -18,7 +18,8 @@ def players_age_nbr_selections_main(full_df, theme='light', dim="nbr_selections"
                                options=options,
                                # we want to display Portugal by default, because CR7.
                                value='POR',
-                               width=120
+                               width=120,
+                               css_classes=[ 'fix_shitdows'] if uses_shitdows() else []
                                )
 
     bound_fn = pn.bind(players_age_nbr_selections_plot,

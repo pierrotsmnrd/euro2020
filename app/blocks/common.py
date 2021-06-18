@@ -4,6 +4,8 @@ from i18n import _
 
 from pdb import set_trace as bp
 
+import holoviews as hv
+
 def uses_shitdows():
     return ("Windows" in pn.state.headers['User-Agent']) or ('windows' in pn.state.headers['User-Agent'])
 
@@ -31,9 +33,14 @@ def fix_flags_hook(plot, element):
         plot.handles['xaxis'].major_label_text_font = "babelstone" 
     
         
-        if "glyph" in plot.handles:
-            print("handled glyph ")
-            plot.handles['glyph'].text_font = "babelstone"
+        if "glyph" in plot.handles: #: and not isinstance(element, hv.element.chart.Bars):
+            try:
+                plot.handles['glyph'].text_font = "babelstone"
+                print("worked : ", element)
+            except:
+                pass 
+           
+            
             
 
         if 'text_1_glyph' in plot.handles: 
