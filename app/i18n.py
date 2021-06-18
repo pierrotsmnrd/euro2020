@@ -34,7 +34,7 @@ def field_positions_colors():
 
 
 def set_lang_id(lg_id):
-    print("SET LANG ! ", lg_id)
+    print("set lang : ", lg_id)
     pn.state.cookies['lg'] = lg_id
     
 

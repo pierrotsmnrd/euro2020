@@ -19,10 +19,10 @@ def fix_flags_hook(plot, element):
     #     except:
     #         pass
 
-    for k in plot.handles:
-        print(k)
-        print( [ p for p in dir(plot.handles[k]) if 'font' in p ] )
-        print( )
+    # for k in plot.handles:
+    #     print(k)
+    #     print( [ p for p in dir(plot.handles[k]) if 'font' in p ] )
+    #     print( )
 
     
 

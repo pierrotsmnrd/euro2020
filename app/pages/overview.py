@@ -193,20 +193,23 @@ class OverviewPage(param.Parameterized):
     def players_chapter(self):
 
         if not self.received_gotit:
-            return ""
+            #print("Chapter -> NOT got it ... ")
+            return pn.pane.HTML("")
         
+        #print("Chapter -> GOT IT ! ")
+
         items = []
 
         items += blocks.positions_distribution.items(self.full_df, self.theme)
         items += blocks.countries_local_leagues.items(self.full_df, self.theme)
-        items+= blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
-        items+= blocks.leagues_distribution.items(self.full_df, self.theme)
-        items+= blocks.countries_clubs.items(self.full_df, self.theme)
-        items+= blocks.clubs_distribution.items(self.full_df, self.theme)
-        items+= blocks.clubs_distribution_per_team.items(self.full_df, self.theme)
-        items+= blocks.players_max_selections_per_country.items(self.full_df, self.theme)
-        items+= blocks.players_age_nbr_selections.items(self.full_df, self.theme)
-        items+= blocks.summed_selections_per_country.items(self.full_df, self.theme)
+        items += blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
+        items += blocks.leagues_distribution.items(self.full_df, self.theme)
+        items += blocks.countries_clubs.items(self.full_df, self.theme)
+        items += blocks.clubs_distribution.items(self.full_df, self.theme)
+        items += blocks.clubs_distribution_per_team.items(self.full_df, self.theme) # Sankey, flags to fix on Windows
+        items += blocks.players_max_selections_per_country.items(self.full_df, self.theme) # flags to fix on Windows
+        items += blocks.players_age_nbr_selections.items(self.full_df, self.theme)
+        items += blocks.summed_selections_per_country.items(self.full_df, self.theme)
 
 
     

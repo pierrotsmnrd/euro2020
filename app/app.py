@@ -68,9 +68,10 @@ pn.extension(raw_css=[css],
             loading_spinner='dots', 
             loading_color='#00aa41')
 
-pn.param.ParamMethod.loading_indicator = True
-#----
+#pn.param.ParamMethod.loading_indicator = True
 
+
+#----
 
 full_df = None
 selections_df = None
@@ -83,16 +84,19 @@ def load_data():
 
 def build_full_data():
 
+    global full_df
+    if full_df is not None:
+        raise Exception("WTF ?!")
 
     players_df = pd.read_csv("../data/players.csv")
     clubs_df = pd.read_csv("../data/clubs.csv")
     selections_df = pd.read_csv("../data/selections.csv")
 
     full_df = pd.merge(players_df, 
-                    clubs_df,
-                    how='left', 
-                    on='club_id',
-                    suffixes=(None, '_club'))
+                        clubs_df,
+                        how='left', 
+                        on='club_id',
+                        suffixes=(None, '_club'))
 
     # HR like "Human Readable"
     full_df['field_position_hr'] = full_df['field_position'].transform(lambda x:_(x))
@@ -131,41 +135,23 @@ def build_full_data():
 
 def get_lang_id():
 
-
-    cache_lg = pn.state.cache['lg'] if 'lg' in pn.state.cache else None 
     params_lg = pn.state.session_args.get('lg')[0].decode('utf-8') if  'lg' in pn.state.session_args.keys() else None
 
-    print(f"cache : {cache_lg} \t params _lg : {params_lg}")
-
-    if cache_lg is not None and params_lg is None:
-        i18n.set_lang_id(pn.state.cache['lg'])
-        return pn.state.cache['lg']
-
-
-    if cache_lg is None and params_lg is None:
-        pn.state.cache['lg'] = 'en'
-
-    elif params_lg in ['fr', 'en']:
-        pn.state.cache['lg'] = params_lg
+    if params_lg in ['fr', 'en']:
+        lang = params_lg
 
     else:
-        pn.state.cache['lg'] = 'en'
+        lang =  'en'
 
-    i18n.set_lang_id(pn.state.cache['lg'])
+    i18n.set_lang_id(lang)
 
-    return pn.state.cache['lg']
+    return lang
 
-
-def uses_noto():
-    return ("Windows" in pn.state.headers['User-Agent']) or ('windows' in pn.state.headers['User-Agent'])
 
 # ---- Pages ---- 
 
 
 def overview_page(**kwargs):
-
-    print("OVERVIEW PAGE : ", pn.state.curdoc.session_context.id)
-
     component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
     return component.view()
     
@@ -177,6 +163,12 @@ def matches_page(**kwargs):
     component = MatchesPage(lang_id=get_lang_id())
     return component.view()
 
+
+def clear_page(**kwargs):
+    pn.state.cache = {}
+
+    print("cache cleared ", pn.state.cache)
+    return ""
 
 
 def test_page(**kwargs):
@@ -204,6 +196,7 @@ if __name__ == "__main__":
                         '/about':about_page, 
                         '/matches':matches_page,
                         '/test':test_page,
+                        '/clear':clear_page,
                     },
                       title={'/overview': 'UEFA Euro 2020 Statistics',
                             '/':'UEFA Euro 2020 Statistics',
@@ -211,6 +204,7 @@ if __name__ == "__main__":
                             '/about':'About',
                             '/matches':'Matches',
                             '/test':'test',
+                            '/clear':'clear',
                             
                       },
                       #websocket_origin=["uefaeuro2020.herokuapp.com"],
