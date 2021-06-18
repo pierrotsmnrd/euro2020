@@ -79,6 +79,7 @@ def countries_clubs_main(full_df, theme='light', full=False):
               default_tools=[],
               fontsize={'yticks': 10, 'xticks': 10},
               shared_axes=False,
+              hooks=[fix_flags_hook],
               ) \
         .redim.values(
         international_name_club=yticks_sorted,

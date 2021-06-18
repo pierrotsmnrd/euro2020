@@ -61,6 +61,7 @@ def summed_selections_per_country_main(full_df, theme):
                                       width=plots_width[c],
                                       title=_(f"match_category_{c}")
                                     ).opts(toolbar=None,
+                                            hooks=[fix_flags_hook],
                                            default_tools=[],
                                            ylim=(0, 1700) if c == 'Total' else (
                                                0, 570),

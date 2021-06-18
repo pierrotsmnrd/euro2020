@@ -34,6 +34,7 @@ def countries_local_leagues_main(full_df, theme='light'):
               shared_axes=False,
               toolbar=None,
               default_tools=[],
+              hooks=[fix_flags_hook],
               ) \
         .redim.label(count=_('dim_number_selected_players'), country_name=_("dim_country_code"))
 

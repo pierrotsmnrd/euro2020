@@ -72,7 +72,8 @@ def players_age_nbr_selections_plot(full_df, theme='light', dim="nbr_selections"
         shared_axes=False,
         show_grid=True,
         toolbar="above",
-        active_tools=[]
+        active_tools=[],
+        hooks=[fix_flags_hook],
     ) \
         .redim.label(
         age_float=_('dim_age'),

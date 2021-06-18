@@ -2,18 +2,48 @@ import panel as pn
 from bokeh.models import HoverTool
 from i18n import _
 
-def uses_noto():
+from pdb import set_trace as bp
+
+def uses_shitdows():
     return ("Windows" in pn.state.headers['User-Agent']) or ('windows' in pn.state.headers['User-Agent'])
 
 
 def fix_flags_hook(plot, element):
+
+    # bp()
+    
+    # for k in plot.handles:
+    #     try:
+    #         plot.handles[k].text_font = "babelstone" 
+    #         print(k)
+    #     except:
+    #         pass
+
+    # for k in plot.handles:
+    #     print(k)
+    #     print( [ p for p in dir(plot.handles[k]) if 'font' in p ] )
+    #     print( )
+
     
 
-    #plot.handles['yaxis'].major_label_text_font = "'babelstone'"
-
-    if uses_noto():    
-        plot.handles['yaxis'].major_label_text_font = "babelstone" #"noto"
+    if uses_shitdows():    
+        plot.handles['yaxis'].major_label_text_font = "babelstone" 
+        plot.handles['xaxis'].major_label_text_font = "babelstone" 
     
+
+        if 'text_1_glyph' in plot.handles: 
+            print("handled text_1_glyph ")
+            plot.handles['text_1_glyph'].text_font = "babelstone"
+            plot.handles['text_1_glyph'].text_font = '42pt'
+        # 
+        
+        # plot.handles['yaxis'].axis_label_text_font = "babelstone" 
+        # plot.handles['xaxis'].axis_label_text_font = "babelstone" 
+        
+
+        # plot.handles['yaxis'].axis_label_text_font_size = "42pt" 
+        # plot.handles['xaxis'].axis_label_text_font_size = "42pt" 
+        
 
 
 def br(n=1):

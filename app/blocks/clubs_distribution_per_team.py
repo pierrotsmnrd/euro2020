@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br
+from .common import fix_flags_hook, br, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
@@ -155,12 +155,12 @@ def sankey_for_country_code(country_code, sankey_full,  theme):
     if theme == 'dark':
         bgcolor = '#424242'
         edge_color = '#707070'
-        hooks = [sankey_hook]
+        hooks = [sankey_hook, fix_flags_hook]
         text_color = 'white'
     else:
         bgcolor = '#424242'  # TO CHANGE !
         edge_color = '#707070'  # TO CHANGE !
-        hooks = []
+        hooks = [fix_flags_hook]
         text_color = 'black'
 
     sankey = hv.Sankey(sankey_fr,
@@ -184,10 +184,13 @@ def sankey_for_country_code(country_code, sankey_full,  theme):
                                             volume=_('dim_number_players'),
                                             players=_('dim_players'))
 
-    return sankey \
-        * hv.Text(0+35, 530, _('dim_country_code')).opts(color=text_color, toolbar=None, default_tools=[],) \
-        * hv.Text(500, 530, _('dim_league_name')).opts(color=text_color, toolbar=None, default_tools=[],) \
-        * hv.Text(1000, 530, _('dim_international_name_club')).opts(color=text_color, toolbar=None, default_tools=[],)
+    result =  sankey 
+        # * hv.Text(0+35, 530, _('dim_country_code')).opts(color=text_color, toolbar=None, default_tools=[],) \
+        # * hv.Text(500, 530, _('dim_league_name')).opts(color=text_color, toolbar=None, default_tools=[],) \
+        # * hv.Text(1000, 530, _('dim_international_name_club')).opts(color=text_color, toolbar=None, default_tools=[],)
+
+
+    return result
 
 
 def clubs_distribution_per_team_main(full_df, theme='light'):
@@ -196,10 +199,12 @@ def clubs_distribution_per_team_main(full_df, theme='light'):
         ['country_name', 'country_flag', 'country_code']).groups.keys())
     options = {f"{i[0]} {i[1]}": i[2] for i in options_raw}
 
+
     select = pn.widgets.Select(name=' ',
                                options=options,
                                value='FRA',
-                               width=120
+                               width=120,
+                               css_classes=[ 'fix_shitdows'] if uses_shitdows() else []
                                )
 
     bound_fn = pn.bind(sankey_for_country_code,

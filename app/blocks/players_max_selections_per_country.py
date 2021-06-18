@@ -45,6 +45,7 @@ def players_max_selections_per_country_main(full_df, theme='light'):
         show_grid=True,
         toolbar="above",
         default_tools=[],
+        hooks=[fix_flags_hook],
 
     ) \
         .redim.label(

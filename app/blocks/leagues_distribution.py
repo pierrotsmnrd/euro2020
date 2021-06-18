@@ -32,6 +32,7 @@ def leagues_distribution_main(full_df, theme='light'):
         toolbar=None,
         default_tools=[],
         shared_axes=False,
+        hooks=[fix_flags_hook],
     ).redim.label(
         country_name_club=_('dim_league_name'),
         count=_('dim_total'))
@@ -58,12 +59,6 @@ def leagues_distribution_main(full_df, theme='light'):
     return (main * highlight_left * highlight_right).opts(ylim=(0, 180),
                                                           toolbar=None,
                                                           default_tools=[],)
-
-
-def _plot(full_df, theme='light'):
-
-
-    return final_plot
 
 
 

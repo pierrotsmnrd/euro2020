@@ -70,6 +70,7 @@ def leagues_distribution_per_team_main(full_df, theme='light'):
               shared_axes=False,
               toolbar=None,
               default_tools=[],
+              hooks=[fix_flags_hook],
               ) \
         .redim.values(
         country_name=count_per_country_club['country_name'].sort_values()[

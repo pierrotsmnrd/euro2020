@@ -31,6 +31,7 @@ def clubs_distribution_main(full_df, theme='light', full=False):
         fontsize={
             'yticks': 10, 'xticks': 10},
         toolbar=None,
+        hooks=[fix_flags_hook],
         default_tools=[],
         shared_axes=False,
         # ylim=(0,18),
