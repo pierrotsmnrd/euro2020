@@ -7,7 +7,43 @@ import pandas as pd
 
 import holoviews as hv
 
-def summed_selections_per_country_main(full_df, theme):
+def summed_selections_per_country_main(full_df, theme, sort="total", asc=True):
+
+
+    options = sort_options(field_positions=False, championships=True)
+    
+
+    sort_selector = pn.widgets.Select(
+        name='',
+        options=list(options.keys()),
+        value=list(options.keys())[-1], # 'Total'
+        width=250)
+
+    asc_cbox = pn.widgets.Checkbox(name=_('ascending'), value=True, width=80)
+
+    bound_fn = pn.bind(summed_selections_per_country_plot,
+                       full_df=full_df,
+                       theme=theme,
+                       sort=sort_selector,
+                       asc=asc_cbox
+                       )
+
+    result = pn.Column(
+        pn.Row( pn.layout.spacer.HSpacer(),
+               pn.pane.Markdown(_('sort_by')),
+                sort_selector,
+                asc_cbox),
+        bound_fn
+    )
+
+    return result
+
+
+def summed_selections_per_country_plot(full_df, theme, sort="Total", asc=True):
+
+    print(sort, asc)
+
+    options = sort_options(field_positions=False, championships=True)
 
     sum_sel_df = full_df.groupby(['country_name', 'country_flag']).sum()[['nbr_selections', 'nbr_selections_euro', 'nbr_selections_wcup', 'nbr_selections_friendly']]\
         .reset_index()\
@@ -28,17 +64,18 @@ def summed_selections_per_country_main(full_df, theme):
     sum_sel_df.set_index(['country_name', 'variable'])
 
     # default
-    asc = True
-    ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == 'Total'].sort_values(
-        'value', ascending=asc)['country_name'].values
+    #ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == 'Total'].sort_values(
+    #    'value', ascending=not asc)['country_name'].values
 
-    sort = 'Total'
+    if sort not in options:
+        sort = options[-1]  # 'Total'
+    else:
+        sort = options[sort]
+        
     # we use this to reorder using redim.values
-    if sort in sort_options():
-        sort = sort_options()[sort]
-        if sort != "country_name":
-            ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == sort].sort_values(
-                'value', ascending=asc)['country_name'].values
+    if sort != "country_name":
+        ordered_countries_names = sum_sel_df[sum_sel_df['variable'] == sort].sort_values(
+            'value', ascending=not asc)['country_name'].values
 
     plots_width = {
         "Euro": 430,
@@ -65,6 +102,7 @@ def summed_selections_per_country_main(full_df, theme):
                                            default_tools=[],
                                            ylim=(0, 1700) if c == 'Total' else (
                                                0, 570),
+                                            xrotation=45, 
 
                                            )\
                         .redim.values(country_name=ordered_countries_names)\
