@@ -74,4 +74,4 @@ def get_data(name):
     
 def dump_data():
     dump('data')
-    dump('plots')
+    # dump('plots')

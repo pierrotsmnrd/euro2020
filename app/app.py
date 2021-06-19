@@ -58,17 +58,14 @@ css = '''
 
 .fix_shitdows {
     font-family: babelstone !important;
-    text-color:red;
 }
 
 .fix_shitdows select {
     font-family: babelstone !important;
-    text-color:red;
 }
 
 .fix_shitdows option {
     font-family: babelstone !important;
-    text-color:red;
 }
 
 '''
