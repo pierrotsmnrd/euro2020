@@ -211,7 +211,7 @@ class OverviewPage(param.Parameterized):
 
         items = []
 
-        countries_local_leagues = blocks.countries_local_leagues.CoutnriesLocalLeagues(self.full_df, self.theme)
+        countries_local_leagues = blocks.countries_local_leagues.CountriesLocalLeagues(self.full_df, self.theme)
         items.append(countries_local_leagues.render)
 
         leagues_distribution_per_team = blocks.leagues_distribution_per_team.LeaguesDistributionPerTeam(self.full_df, self.theme)

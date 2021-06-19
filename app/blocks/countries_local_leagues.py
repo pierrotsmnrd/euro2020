@@ -109,7 +109,7 @@ def countries_local_leagues_txt():
 
 from .base_block import BaseBlock
 
-class CoutnriesLocalLeagues(BaseBlock):
+class CountriesLocalLeagues(BaseBlock):
 
     def __init__(self, full_df, theme):
         super(BaseBlock, self).__init__()

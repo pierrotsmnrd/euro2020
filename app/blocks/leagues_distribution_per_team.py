@@ -52,6 +52,11 @@ def leagues_distribution_per_team_main(full_df, theme='light'):
         count_per_country_club['country_name_club'] = count_per_country_club['country_code_club'] \
             .transform(lambda x: "%s %s" % (_(x, countries_translations(),), _(x, countries_translations(), 'flag')))
 
+        # count_per_country_club['country_name'] = count_per_country_club['country_code'].transform(lambda x: _(x, countries_translations()) )
+        # count_per_country_club['country_flag'] = count_per_country_club['country_code'].transform(lambda x: _(x, countries_translations(), 'flag'))
+        # count_per_country_club['country_name_flag'] = count_per_country_club['country_name'] + " " + count_per_country_club['country_flag']
+
+
         count_per_country_club['league_name'] = count_per_country_club['country_code_club'] \
             .transform(lambda x: "%s %s" % (_(x, countries_translations(), 'league'), _(x, countries_translations(), 'flag')))
         count_per_country_club['country_flag'] = count_per_country_club['country_code'] \
@@ -90,8 +95,7 @@ def leagues_distribution_per_team_main(full_df, theme='light'):
         .redim.values(
         country_name=count_per_country_club['country_name'].sort_values()[
             ::-1],
-        league_name=count_per_country_club.sort_values('country_name_club')[
-            'league_name'],
+        league_name=count_per_country_club['league_name'].sort_values(),
     ) \
         .redim.label(country_name=_("dim_country_code"),
                      league_name=_(
