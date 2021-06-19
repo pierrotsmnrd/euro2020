@@ -31,6 +31,11 @@ css = '''
     font-size:14px;
 }
 
+.main-content {
+    overflow-x: scroll !important;
+}
+
+
 .gotit-hide {
     visibility:hidden;
 }

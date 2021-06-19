@@ -111,6 +111,15 @@ class OverviewPage(param.Parameterized):
     @param.depends("lang_id", "theme", "received_gotit")
     def teams_chapter(self):
         
+        gspec = pn.GridSpec(  sizing_mode='stretch_width', 
+                              height=210, 
+                              
+                                )
+
+        gspec[0  , 0:3] = pn.Row(pn.pane.PNG('https://upload.wikimedia.org/wikipedia/fr/3/32/UEFA_Euro_2020_logo.png', width=150))
+        gspec[0   , 3:12] = pn.Column( pn.pane.Markdown(f'''## {_('title_overview')} '''), 
+                                       pn.pane.Markdown(f'''{_('intro_overview')} '''))
+
         if not self.received_gotit:
 
             checkbox =  pn.widgets.Checkbox.from_param(self.param.received_gotit, 
@@ -159,35 +168,18 @@ class OverviewPage(param.Parameterized):
                                             
                                             </script>''' )
 
-
-            return pn.Row( pn.pane.HTML( width=100, height=100, loading=True),
+        
+            gspec[1   , :] = pn.Row( pn.pane.HTML( width=100, height=100, loading=True),
                             checkbox, 
                             trigger_on_fonts_loaded,
                             
                     )
+            
+            return gspec
              
 
+        return gspec
     
-
-        result = pn.Column( 
-                    pn.layout.spacer.VSpacer(height=15),
-                    pn.Row(
-                            pn.pane.PNG('https://upload.wikimedia.org/wikipedia/fr/3/32/UEFA_Euro_2020_logo.png', width=150),
-                            pn.layout.spacer.Spacer(width=1),
-                            br(2),
-                            pn.pane.Markdown(f'''## {_('title_overview')} 
-
-{_('intro_overview')}
-''', sizing_mode='stretch_width', min_height=200),
-
-                            
-                            
-                        ),
-                        #pn.layout.spacer.Spacer(height=1),
-                        sizing_mode='stretch_width',
-            )
-                    
-        return pn.Row(result,  sizing_mode='stretch_width')
 
     @param.depends("lang_id", "theme", "received_gotit")
     def players_chapter(self):
@@ -274,9 +266,12 @@ class OverviewPage(param.Parameterized):
         theme.sidebar.append(self.menu)
 
         #theme.main.append(self.test_markdown)
-        theme.main.append(self.teams_chapter)
-        theme.main.append(self.players_chapter)
+
+
+        theme.main.append(self.teams_chapter) 
         
+        theme.main.append(self.players_chapter)
+
         theme.main.append(pn.Spacer(height=30))
 
 
