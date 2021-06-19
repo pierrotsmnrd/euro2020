@@ -181,6 +181,24 @@ class OverviewPage(param.Parameterized):
         return gspec
     
 
+
+
+    @param.depends("lang_id", "theme", "received_gotit")
+    def players_chapter_1(self):
+
+        if not self.received_gotit:
+            #print("Chapter -> NOT got it ... ")
+            return pn.pane.HTML("")
+        
+
+        items = []
+        position_distribution = blocks.positions_distribution.PositionsDistribution(self.full_df, self.theme)
+        items.append(position_distribution.render)
+
+        result = pn.Column(objects=items, sizing_mode='stretch_width')
+        return result
+
+
     @param.depends("lang_id", "theme", "received_gotit")
     def players_chapter(self):
 
@@ -192,10 +210,6 @@ class OverviewPage(param.Parameterized):
 
 
         items = []
-
-        
-        position_distribution = blocks.positions_distribution.PositionsDistribution(self.full_df, self.theme)
-        items.append(position_distribution.render)
 
         countries_local_leagues = blocks.countries_local_leagues.CoutnriesLocalLeagues(self.full_df, self.theme)
         items.append(countries_local_leagues.render)
@@ -292,6 +306,13 @@ class OverviewPage(param.Parameterized):
         #theme.main.append(self.test_markdown)
 
         theme.main.append(self.teams_chapter) 
+        
+        # We load the first chapter independantly, because 
+        # all the chapters are actually in one big pn.Column.
+        # When loading the page, the column takes time to show up, because of all its content.
+        # So by displaying the first chapter alone, in its own pn.Column, 
+        # it's shown faster and gives a better user experience
+        theme.main.append(self.players_chapter_1)
         theme.main.append(self.players_chapter)
         
 
