@@ -1,7 +1,7 @@
 {
 
-"main_title":{  "fr":"Stats Euro 2020", 
-                "en":"Stats Euro 2020"},
+"main_title":{  "fr":"Stats Euro 2020 Football ⚽️", 
+                "en":"Stats Euro 2020 Football ⚽️ "},
 
     "menu_overview":{  "fr":"Joueurs", 
                        "en":"Players"
@@ -76,8 +76,8 @@
 "label_players" : {"fr":"Joueurs", "en":"Players"} ,
 
 
-"title_overview":{"fr":"Euro 2020 : Statistiques, Analyse et Visualisation des joueurs",
-            "en":"Euro 2020 : Statistics, Analysis and Visualization of the players"},
+"title_overview":{"fr":"⚽️ Euro 2020 : Statistiques, Analyse et Visualisation des joueurs",
+            "en":"⚽️ Euro 2020 : Statistics, Analysis and Visualization of the players"},
 
 "intro_overview":{
     "fr":"La **seizième édition** du **Championnat d'Europe de football** se déroule du 11 juin au 11 juillet 2021.\n\n**24 équipes nationales** réparties en 6 groupes de 4, jouent dans 11 stades européens.\n\nChaque équipe est autorisée à sélectionner **26 joueurs** (au lieu de 23 habituellement), soit un total de **624** joueurs d'horizons différents.",
