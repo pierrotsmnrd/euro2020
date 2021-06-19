@@ -139,22 +139,38 @@ def leagues_distribution_per_team_txt():
                         width=200
             ) )
 
-def items(full_df, theme):
 
-    items = [   br(),
-            
-            pn.pane.Markdown(f'''### {_('leagues_distribution_per_team_title')} '''),
-            pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f'''{_('leagues_distribution_per_team_subtitle')} ''',
-                    sizing_mode='stretch_width',
-                    height=50),                    
-            ),
-            pn.Row(
-                leagues_distribution_per_team_main(full_df, theme),
-                leagues_distribution_per_team_txt()
-            ),
+from .base_block import BaseBlock
 
+class LeaguesDistributionPerTeam(BaseBlock):
+
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = leagues_distribution_per_team_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [   pn.pane.Markdown(f'''### {_('leagues_distribution_per_team_title')} '''),
+                    pn.Row(pn.Spacer(width=50), 
+                            pn.pane.Markdown(f'''{_('leagues_distribution_per_team_subtitle')} ''',
+                            sizing_mode='stretch_width',
+                            height=50),                    
+                    ),
+        ]
+
+        if self.preloading:
         
-            ]
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
 
-    return items
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                            leagues_distribution_per_team_txt()
+                        )
+                    )
+            return items 
+
+

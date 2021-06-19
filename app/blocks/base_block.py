@@ -1,6 +1,8 @@
 import param
 import panel as pn
 
+from random import randint
+
 class BaseBlock(param.Parameterized):
 
     preloading = param.Boolean(default=True)
@@ -10,6 +12,6 @@ class BaseBlock(param.Parameterized):
         self.preloading=False
         
     @param.depends('preloading')
-    def render(self, order=1):
-        pn.state.curdoc.add_timeout_callback(self.trigger_postload, 100*order)
+    def render(self):
+        pn.state.curdoc.add_timeout_callback(self.trigger_postload, 100 ) # 1000 *randint(5,15))
         return pn.Column(objects=self.items(), sizing_mode='stretch_width')

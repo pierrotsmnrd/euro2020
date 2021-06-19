@@ -84,18 +84,32 @@ def leagues_distribution_txt():
     return pn.pane.Markdown(explanations('leagues_distribution') )
     
 
-def items(full_df, theme):
 
-    items = [  
+from .base_block import BaseBlock
+
+class LeaguesDistribution(BaseBlock):
+
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = leagues_distribution_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [   pn.pane.Markdown(f'''{_('leagues_distribution_title')} '''),
+        ]
+
+        if self.preloading:
         
-            br(),
-            pn.pane.Markdown(f'''{_('leagues_distribution_title')} '''),
-            pn.Row(
-                pn.Spacer(width=50), 
-                leagues_distribution_txt(),
-                leagues_distribution_main(full_df, theme),
-                
-            )
-            ]
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
 
-    return items
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                            leagues_distribution_txt()
+                        )
+                    )
+            return items 
+

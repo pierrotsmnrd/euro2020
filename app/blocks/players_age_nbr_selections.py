@@ -99,26 +99,38 @@ def players_age_nbr_selections_main_txt():
 
 
 
-def items(full_df, theme):
+from .base_block import BaseBlock
 
-    items = [   br(3),
-            pn.Row(pn.Spacer(width=50), 
-                
-                pn.Column(
-                    # ----
-                    br(),
-                    pn.pane.Markdown(f''' {_('selections_subtitle_2')} ''', sizing_mode='stretch_width'),
-                    
-                    pn.Row(players_age_nbr_selections_main(full_df,  theme, dim="nbr_selections" ), 
-                    
+class PlayersMaxSelectionsPerCountry(BaseBlock):
+
+    def __init__(self, full_df, theme, dim="nbr_selections"):
+        super(BaseBlock, self).__init__()
+        self.main_plot = players_age_nbr_selections_main(full_df, theme, dim)
+
+    
+    def items(self):
+       
+        items = [   pn.Row(pn.Spacer(width=50), 
                         pn.Column(
-                                br(3),
-                                players_age_nbr_selections_main_txt()
-                                )
-                        ),
-                )
-            )
-        
-            ]
+                            pn.pane.Markdown(f''' {_('selections_subtitle_2')} ''', sizing_mode='stretch_width'),
+                        )
+                    )
+        ]
 
-    return items
+        if self.preloading:
+        
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
+
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                           players_age_nbr_selections_main_txt(),
+                            self.main_plot,
+                        )
+                    )
+            return items 
+
+
+
+

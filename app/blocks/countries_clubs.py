@@ -112,21 +112,38 @@ def countries_clubs_txt():
     return pn.pane.Markdown(explanations('countries_clubs'))
 
 
-def items(full_df, theme):
 
-    items = [  
-            br(3),
-                pn.pane.Markdown(f'''### {_('countries_clubs_title')} '''),
+from .base_block import BaseBlock
 
-                pn.Row(pn.Spacer(width=50), 
-                        pn.pane.Markdown(f''' {_('countries_clubs_subtitle')} ''', sizing_mode='stretch_width'),
-                        
-                ),
-                pn.Row(pn.Spacer(width=50),
-                    pn.Column(countries_clubs_main(full_df, theme),
-                    countries_clubs_txt())
-                ),
-                
-            ]
+class ConutriesClubs(BaseBlock):
 
-    return items
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = countries_clubs_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [   pn.pane.Markdown(f'''### {_('countries_clubs_title')} '''),
+                    pn.Row(pn.Spacer(width=50), 
+                            pn.pane.Markdown(f''' {_('countries_clubs_subtitle')} ''', sizing_mode='stretch_width'),
+                            
+                    ),
+        ]
+
+        if self.preloading:
+        
+            items.append( pn.Spacer(height=508, loading=True) )
+            items.append( countries_clubs_txt() )       
+            
+            return items
+
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                            ))
+            items.append( countries_clubs_txt() )       
+                            
+            return items 
+

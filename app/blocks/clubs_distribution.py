@@ -82,16 +82,31 @@ def clubs_distribution_txt():
 
 
 
+from .base_block import BaseBlock
 
-def items(full_df, theme):
+class ClubsDistribution(BaseBlock):
 
-    items = [     br(),
-            pn.pane.Markdown(f'''{_('clubs_distribution_title')} '''),
-            pn.Row(pn.Spacer(width=50),
-                clubs_distribution_txt(),
-                clubs_distribution_main(full_df, theme)
-            )
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = clubs_distribution_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [  pn.pane.Markdown(f'''{_('clubs_distribution_title')} '''),
+        ]
+
+        if self.preloading:
         
-            ]
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
 
-    return items
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                            clubs_distribution_txt()
+                        )
+                    )
+            return items 
+

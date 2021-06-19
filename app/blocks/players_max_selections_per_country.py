@@ -111,23 +111,36 @@ def players_max_selections_per_country_txt():
 
 
 
-def items(full_df, theme):
+from .base_block import BaseBlock
 
-    items = [   br(3),
-                pn.Row(pn.Spacer(width=50), 
-                pn.Column(
-                    pn.pane.Markdown(f'''## {_('selections_title')} '''),
+class PlayersMaxSelectionsPerCountry(BaseBlock):
+
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = players_max_selections_per_country_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [   pn.pane.Markdown(f'''## {_('selections_title')} '''),
                     br(),
                     pn.pane.Markdown(f''' {_('selections_subtitle_1')} ''', sizing_mode='stretch_width'),
                     br(),
-                    pn.Row(players_max_selections_per_country_txt(),
-                           players_max_selections_per_country_main(full_df, theme)
-                    ),
-                    
-                )
-                )
+        ]
+
+        if self.preloading:
+        
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
+
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                           players_max_selections_per_country_txt(),
+                            self.main_plot,
+                        )
+                    )
+            return items 
 
 
-            ]
 
-    return items

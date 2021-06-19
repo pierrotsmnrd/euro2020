@@ -140,22 +140,33 @@ def summed_selections_per_country_plot(full_df, theme, sort_key="Total", asc=Tru
 
 
 
-def items(full_df, theme):
 
-    items = [   br(3),
-            pn.Row(pn.Spacer(width=50), 
-                
-                pn.Column(
-                    br(2),
-                    pn.pane.Markdown(f''' {_('selections_subtitle_3')} ''', sizing_mode='stretch_width'),
-                    br(),
-                    summed_selections_per_country_main(full_df, theme),
-                    br(),
-                    pn.pane.Markdown(f''' {_('selections_conclusion')} ''', sizing_mode='stretch_width'),
 
-                )
-            ),
+from .base_block import BaseBlock
+
+class SummedSelectionsPerCountry(BaseBlock):
+
+    def __init__(self, full_df, theme, dim="nbr_selections"):
+        super(BaseBlock, self).__init__()
+        self.main_plot = summed_selections_per_country_main(full_df, theme)
+
+    
+    def items(self):
+
+        items = [   pn.Row(pn.Spacer(width=50), 
+                            
+                            pn.Column(
+                                br(2),
+                                pn.pane.Markdown(f''' {_('selections_subtitle_3')} ''', sizing_mode='stretch_width'),
+                                br(),
+                                pn.Spacer(height=508, loading=True) if self.preloading else self.main_plot  , 
+                                br(),
+                                pn.pane.Markdown(f''' {_('selections_conclusion')} ''', sizing_mode='stretch_width'),
+
+                            )
+                        ),
         
             ]
 
-    return items
+            
+        return items

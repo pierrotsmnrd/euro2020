@@ -235,17 +235,33 @@ def clubs_distribution_per_team_main(full_df, theme='light'):
 
 
 
-def items(full_df, theme):
 
-    items = [  
-         br(3),
-            pn.Row(pn.Spacer(width=50), 
+from .base_block import BaseBlock
+
+class ClubsDistributionPerTeam(BaseBlock):
+
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = clubs_distribution_per_team_main(full_df, theme)
+
+    
+    def items(self):
+       
+        items = [  pn.Row(pn.Spacer(width=50), 
                     pn.pane.Markdown(f''' {_('sankey_title')} ''')
             ),
-            pn.Row(pn.Spacer(width=50),
-                clubs_distribution_per_team_main(full_df,  theme)
-            )
+        ]
 
-            ]
+        if self.preloading:
+        
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
 
-    return items
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                        )
+                    )
+            return items 
+
