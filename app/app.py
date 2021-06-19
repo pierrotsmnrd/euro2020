@@ -212,8 +212,8 @@ if __name__ == "__main__":
                         '/clear':clear_page,
                         '/dump':dump_page
                     },
-                      title={'/overview': 'Stats Euro 2020 Football ⚽️',
-                            '/':'Stats Euro 2020 Football ⚽️',
+                      title={'/overview': 'Stats Euro 2020 ⚽️',
+                            '/':'Stats Euro 2020 ⚽️',
                             '/linkedin':'LinkedIn Profile Pierre-Olivier Simonard',
                             '/about':'About',
                             '/matches':'Matches',
