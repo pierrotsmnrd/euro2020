@@ -72,7 +72,9 @@ css = '''
 
 
 pn.extension(raw_css=[css], 
-            js_modules={"fontloader":'resources/FontLoader.js'}, #https://github.com/smnh/FontLoader
+            js_modules={"fontloader":'resources/FontLoader.js',     #https://github.com/smnh/FontLoader 
+                        "OWA":"resources/OWA.js"
+            }, 
             loading_spinner='dots', 
             loading_color='#00aa41')
 
