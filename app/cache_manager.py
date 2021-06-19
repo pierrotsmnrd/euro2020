@@ -5,6 +5,8 @@ import pickle
 
 from pdb import set_trace as bp
 import os
+import i18n
+
 
 def store(store_name, obj_name, obj):
 
@@ -67,10 +69,10 @@ def get_plot(name):
     return restore('plots', name)
     
 def cache_data(name, data):
-    store('data', name, data)
+    store('data', name + f"_{i18n.get_lang_id()}", data)
     
 def get_data(name):
-    return restore('data', name)
+    return restore('data', name + f"_{i18n.get_lang_id()}")
     
 def dump_data():
     dump('data')
