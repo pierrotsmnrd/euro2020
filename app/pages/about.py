@@ -108,9 +108,9 @@ class AboutPage(param.Parameterized):
     def main_view(self):
         
         if self.theme =='light':
-            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020" , )
+            theme = pn.template.MaterialTemplate(title=_("main_title")  )
         else:
-            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020"  , 
+            theme = pn.template.MaterialTemplate(title=_("main_title"), 
                                                 theme=DarkTheme,
                                                 #main_max_width="1200px"
                                                 )

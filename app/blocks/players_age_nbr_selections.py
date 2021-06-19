@@ -101,7 +101,7 @@ def players_age_nbr_selections_main_txt():
 
 from .base_block import BaseBlock
 
-class PlayersMaxSelectionsPerCountry(BaseBlock):
+class PlayersAgeNbrSelections(BaseBlock):
 
     def __init__(self, full_df, theme, dim="nbr_selections"):
         super(BaseBlock, self).__init__()
@@ -110,10 +110,9 @@ class PlayersMaxSelectionsPerCountry(BaseBlock):
     
     def items(self):
        
-        items = [   pn.Row(pn.Spacer(width=50), 
-                        pn.Column(
+        items = [ br(2),
+                      pn.Row(pn.Spacer(width=50), 
                             pn.pane.Markdown(f''' {_('selections_subtitle_2')} ''', sizing_mode='stretch_width'),
-                        )
                     )
         ]
 
@@ -125,7 +124,12 @@ class PlayersMaxSelectionsPerCountry(BaseBlock):
         else:
 
             items.append( pn.Row(pn.Spacer(width=50),
-                           players_age_nbr_selections_main_txt(),
+
+                                pn.Column(
+                                    pn.Spacer(height=50),
+                                    players_age_nbr_selections_main_txt(),
+                                ),
+                           
                             self.main_plot,
                         )
                     )

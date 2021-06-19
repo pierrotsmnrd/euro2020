@@ -209,36 +209,37 @@ class OverviewPage(param.Parameterized):
         #print("Chapter -> GOT IT ! ")
 
 
+
         items = []
 
         countries_local_leagues = blocks.countries_local_leagues.CountriesLocalLeagues(self.full_df, self.theme)
-        items.append(countries_local_leagues.render)
+        items+= [  br(2), countries_local_leagues.render ]
 
         leagues_distribution_per_team = blocks.leagues_distribution_per_team.LeaguesDistributionPerTeam(self.full_df, self.theme)
-        items.append(leagues_distribution_per_team.render)
+        items+= [ br(), leagues_distribution_per_team.render]
 
         leagues_distribution = blocks.leagues_distribution.LeaguesDistribution(self.full_df, self.theme)
-        items.append(leagues_distribution.render)
+        items += [ leagues_distribution.render ]
 
         countries_clubs = blocks.countries_clubs.ConutriesClubs(self.full_df, self.theme)
-        items.append(countries_clubs.render)
+        items+= [ br(), countries_clubs.render ]
 
         clubs_distribution = blocks.clubs_distribution.ClubsDistribution(self.full_df, self.theme)
-        items.append(clubs_distribution.render)
+        items += [ clubs_distribution.render ]
 
         # Sankey, flags to fix on Windows
         clubs_distribution_per_team = blocks.clubs_distribution_per_team.ClubsDistributionPerTeam(self.full_df, self.theme) 
-        items.append(clubs_distribution_per_team.render)
+        items += [ clubs_distribution_per_team.render ]
 
         # flags to fix on Windows
         players_max_selections_per_country = blocks.players_max_selections_per_country.PlayersMaxSelectionsPerCountry(self.full_df, self.theme) 
-        items.append(players_max_selections_per_country.render)
+        items += [ br(2), players_max_selections_per_country.render ]
 
-        players_age_nbr_selections = blocks.players_age_nbr_selections.PlayersMaxSelectionsPerCountry(self.full_df, self.theme)
-        items.append(players_age_nbr_selections.render)
+        players_age_nbr_selections = blocks.players_age_nbr_selections.PlayersAgeNbrSelections(self.full_df, self.theme)
+        items += [ players_age_nbr_selections.render ]
 
         summed_selections_per_country = blocks.summed_selections_per_country.SummedSelectionsPerCountry(self.full_df, self.theme)
-        items.append(summed_selections_per_country.render)
+        items += [ summed_selections_per_country.render ]
 
 
         
@@ -291,9 +292,9 @@ class OverviewPage(param.Parameterized):
     def view(self):
           
         if self.theme =='light':
-            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020" , )
+            theme = pn.template.MaterialTemplate(title=_("main_title")  )
         else:
-            theme = pn.template.MaterialTemplate(title="UEFA Euro 2020"  , 
+            theme = pn.template.MaterialTemplate(title=_("main_title") , 
                                                 theme=DarkTheme,
                                                 #main_max_width="1200px"
                                                 )

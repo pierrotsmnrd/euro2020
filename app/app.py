@@ -212,8 +212,8 @@ if __name__ == "__main__":
                         '/clear':clear_page,
                         '/dump':dump_page
                     },
-                      title={'/overview': 'UEFA Euro 2020 Statistics',
-                            '/':'UEFA Euro 2020 Statistics',
+                      title={'/overview': 'Stats Euro 2020 Football',
+                            '/':'Stats Euro 2020 Football',
                             '/linkedin':'LinkedIn Profile Pierre-Olivier Simonard',
                             '/about':'About',
                             '/matches':'Matches',
@@ -223,7 +223,7 @@ if __name__ == "__main__":
                             
                       },
                       #websocket_origin=["uefaeuro2020.herokuapp.com"],
-                      websocket_origin=["*"],
+                      websocket_origin=["statseuro2020.com", "localhost"],
                       autoreload=True,
                       port=int(os.getenv("PORT", 80)),
                       threaded=True,
