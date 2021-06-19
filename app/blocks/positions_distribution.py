@@ -67,12 +67,13 @@ def positions_distribution_plot(full_df, theme='light', sort="country_name", asc
         ordered_countries_names = counts.sort_values(
             'country_name', ascending=not asc)['country_name'].values
 
+        
         # we use this to reorder using redim.values
         if sort in sort_options():
             sort = sort_options()[sort]
             if sort != "country_name":
                 ordered_countries_names = counts[counts['field_position'] == sort].sort_values(
-                    'count', ascending=not asc)['country_name'].values
+                    'count', ascending=not asc)['country_name_flag'].values
 
         positions = full_df.field_position.unique()
 
@@ -155,7 +156,7 @@ def positions_distribution_plot(full_df, theme='light', sort="country_name", asc
                   toolbar=None,
                   default_tools=[],
                   hooks=[fix_flags_hook]
-                  ).redim.values(country_name=ordered_countries_names)
+                  ).redim.values(country_name_flag=ordered_countries_names)
 
         if final_plot is None:
             final_plot = plot
