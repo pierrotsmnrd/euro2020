@@ -190,21 +190,43 @@ class OverviewPage(param.Parameterized):
         
         #print("Chapter -> GOT IT ! ")
 
+
         items = []
 
-        items += blocks.positions_distribution.items(self.full_df, self.theme)
-        items += blocks.countries_local_leagues.items(self.full_df, self.theme)
-        items += blocks.leagues_distribution_per_team.items(self.full_df, self.theme)
-        items += blocks.leagues_distribution.items(self.full_df, self.theme)
-        items += blocks.countries_clubs.items(self.full_df, self.theme)
-        items += blocks.clubs_distribution.items(self.full_df, self.theme)
-        items += blocks.clubs_distribution_per_team.items(self.full_df, self.theme) # Sankey, flags to fix on Windows
-        items += blocks.players_max_selections_per_country.items(self.full_df, self.theme) # flags to fix on Windows
-        items += blocks.players_age_nbr_selections.items(self.full_df, self.theme)
-        items += blocks.summed_selections_per_country.items(self.full_df, self.theme)
+        
+        position_distribution = blocks.positions_distribution.PositionsDistribution(self.full_df, self.theme)
+        items.append(position_distribution.render)
+
+        countries_local_leagues = blocks.countries_local_leagues.CoutnriesLocalLeagues(self.full_df, self.theme)
+        items.append(countries_local_leagues.render)
+
+        # leagues_distribution_per_team = blocks.leagues_distribution_per_team.TODO(self.full_df, self.theme)
+        # items.append(leagues_distribution_per_team.render)
+
+        # leagues_distribution = blocks.leagues_distribution.TODO(self.full_df, self.theme)
+        # items.append(leagues_distribution.render)
+
+        # countries_clubs = blocks.countries_clubs.TODO(self.full_df, self.theme)
+        # items.append(countries_clubs.render)
+
+        # clubs_distribution = blocks.clubs_distribution.TODO(self.full_df, self.theme)
+        # items.append(clubs_distribution.render)
+
+        # clubs_distribution_per_team = blocks.clubs_distribution_per_team.TODO(self.full_df, self.theme) # Sankey, flags to fix on Windows
+        # items.append(clubs_distribution_per_team.render)
+
+        # players_max_selections_per_country = blocks.players_max_selections_per_country.TODO(self.full_df, self.theme) # flags to fix on Windows
+        # items.append(players_max_selections_per_country.render)
+
+        # players_age_nbr_selections = blocks.players_age_nbr_selections.TODO(self.full_df, self.theme)
+        # items.append(players_age_nbr_selections.render)
+
+        # summed_selections_per_country = blocks.summed_selections_per_country.TODO(self.full_df, self.theme)
+        # items.append(summed_selections_per_country.render)
 
 
-    
+        
+
         items += [
         
             br(3),
@@ -267,10 +289,9 @@ class OverviewPage(param.Parameterized):
 
         #theme.main.append(self.test_markdown)
 
-
         theme.main.append(self.teams_chapter) 
-        
         theme.main.append(self.players_chapter)
+        
 
         theme.main.append(pn.Spacer(height=30))
 

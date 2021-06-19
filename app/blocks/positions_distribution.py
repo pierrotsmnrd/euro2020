@@ -1,3 +1,4 @@
+from inspect import ClassFoundException
 import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
@@ -5,6 +6,7 @@ from bokeh.models import HoverTool
 from .common import fix_flags_hook, br, sort_options
 import pandas as pd
 import holoviews as hv
+from .base_block import BaseBlock
 
 import os
 import cache_manager 
@@ -173,16 +175,31 @@ def positions_distribution_txt():
                         pn.pane.Markdown(explanations('positions_distribution')))
 
 
+from .base_block import BaseBlock
 
-def items(full_df, theme):
+class PositionsDistribution(BaseBlock):
 
-    items = [   pn.pane.Markdown(f'''## {_('positions_distribution_title')} '''),
-                pn.pane.Markdown(_('intro_positions_distribution'), ),
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = positions_distribution_main(full_df, theme)
 
-                pn.Row(pn.Spacer(width=50),
-                    positions_distribution_main(full_df, theme),
-                    positions_distribution_txt()
-                )
-            ]
+    
+    def items(self):
+       
+        items = [   pn.pane.Markdown(f'''## {_('positions_distribution_title')} '''),
+                    pn.pane.Markdown(_('intro_positions_distribution'), ),
+        ]
 
-    return items
+        if self.preloading:
+        
+            items.append( pn.Spacer(height=508, loading=True) )
+            return items
+
+        else:
+
+            items.append( pn.Row(pn.Spacer(width=50),
+                            self.main_plot,
+                            positions_distribution_txt()
+                        )
+                    )
+            return items 

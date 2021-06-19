@@ -79,7 +79,7 @@ pn.extension(raw_css=[css],
             loading_spinner='dots', 
             loading_color='#00aa41')
 
-pn.param.ParamMethod.loading_indicator = True
+#pn.param.ParamMethod.loading_indicator = True
 
 
 #----

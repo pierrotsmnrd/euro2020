@@ -58,23 +58,40 @@ def countries_local_leagues_txt():
                                 width=450) 
 
 
-def items(full_df, theme):
 
-    items = [  
-         pn.pane.Markdown(f'''### {_('countries_local_leagues_title')} '''),
-                # Seulement 5 teams over 24 have more than 50% of their players coming from their own league
-            pn.Row(pn.Spacer(width=50), 
-                    pn.pane.Markdown(f''' {_('countries_local_leagues_subtitle')} ''', 
-                    sizing_mode='stretch_width'),
-            ),
-            pn.Row(pn.Spacer(width=50),
-                countries_local_leagues_txt(),
-                countries_local_leagues_main(full_df, theme),
-             
-            ),
-            br(2),
-            pn.pane.Markdown(f''' {_('countries_local_leagues_footer')}  '''),
+
+from .base_block import BaseBlock
+
+class CoutnriesLocalLeagues(BaseBlock):
+
+    def __init__(self, full_df, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = countries_local_leagues_main(full_df, theme)
+
+    
+    def items(self):
         
-            ]
+        items = [  
+            pn.pane.Markdown(f'''### {_('countries_local_leagues_title')} '''),
+                    # Seulement 5 teams over 24 have more than 50% of their players coming from their own league
+                pn.Row(pn.Spacer(width=50), 
+                        pn.pane.Markdown(f''' {_('countries_local_leagues_subtitle')} ''', 
+                        sizing_mode='stretch_width'),
+                ) ]
 
-    return items
+        if self.preloading:
+            items.append( pn.Spacer(height=508, loading=True) )
+        else:
+            
+            items.append( pn.Row(pn.Spacer(width=50),
+                    countries_local_leagues_txt(),
+                     self.main_plot,
+                ))
+        
+        items += [
+                    br(2),
+                    pn.pane.Markdown(f''' {_('countries_local_leagues_footer')}  '''),
+                ]
+                
+
+        return items

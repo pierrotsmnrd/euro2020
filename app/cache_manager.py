@@ -19,6 +19,9 @@ def store(store_name, obj_name, obj):
 
 def restore(store_name, obj_name):
 
+    if 'nocache' in pn.state.session_args:
+        return None
+
     dump_file = f"../app_data/cache/{store_name}/{obj_name}.pickle"
     has_dump = os.path.isfile(dump_file)
 
