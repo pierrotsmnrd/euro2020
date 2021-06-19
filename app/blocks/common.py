@@ -74,7 +74,7 @@ def sort_options(field_positions=True, country_name=True, championships=False):
         result = {**result, **field_positions}
 
     if country_name:
-        result[_('dim_country_code')] =  "country_name"
+        result[_('dim_country_code')] =  "country_name_flag"
 
     if championships:
         

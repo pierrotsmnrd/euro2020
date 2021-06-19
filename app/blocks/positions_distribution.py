@@ -14,7 +14,7 @@ import cache_manager
 
 from pdb import set_trace as bp
 
-def positions_distribution_main(full_df, theme='light', sort="country_name", asc=True):
+def positions_distribution_main(full_df, theme='light', sort="country_name_flag", asc=True):
 
     sort_selector = pn.widgets.Select(
         name='',
@@ -44,7 +44,7 @@ def positions_distribution_main(full_df, theme='light', sort="country_name", asc
 
 
 
-def positions_distribution_plot(full_df, theme='light', sort="country_name", asc=True):
+def positions_distribution_plot(full_df, theme='light', sort="country_name_flag", asc=True):
 
     plot_name = os.path.basename(__file__)[:-3] + f"_{theme}_{sort}_{asc}"
 
@@ -65,13 +65,13 @@ def positions_distribution_plot(full_df, theme='light', sort="country_name", asc
 
         # default
         ordered_countries_names = counts.sort_values(
-            'country_name', ascending=not asc)['country_name'].values
+            'country_name_flag', ascending= asc)['country_name_flag'].values
 
         
         # we use this to reorder using redim.values
         if sort in sort_options():
             sort = sort_options()[sort]
-            if sort != "country_name":
+            if sort != "country_name_flag":
                 ordered_countries_names = counts[counts['field_position'] == sort].sort_values(
                     'count', ascending=not asc)['country_name_flag'].values
 

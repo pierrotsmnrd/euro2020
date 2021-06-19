@@ -80,7 +80,7 @@ def summed_selections_per_country_plot(full_df, theme, sort_key="Total", asc=Tru
         
         
         # we use this to reorder using redim.values
-        if sort_key == "country_name":
+        if sort_key == "country_name_flag":
             ordered_countries_names = sum_sel_df['country_name'].sort_values(ascending=not asc).unique()
 
         else:
