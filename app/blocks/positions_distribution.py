@@ -56,7 +56,6 @@ def positions_distribution_plot(full_df, theme='light', sort="country_name", asc
 
         counts['country_name'] = counts['country_code'].transform(lambda x: _(x, countries_translations()) )
         counts['country_flag'] = counts['country_code'].transform(lambda x: _(x, countries_translations(), 'flag'))
-
         counts['country_name_flag'] = counts['country_name'] + " " + counts['country_flag']
 
 

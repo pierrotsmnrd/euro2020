@@ -2,11 +2,44 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br
+from .common import fix_flags_hook, br, uses_shitdows
 import pandas as pd
 
 import os
 import cache_manager 
+
+
+def hover():
+
+    fx_shitdows = 'fix_shitdows' if uses_shitdows() else ''
+
+    tooltips = f"""
+    <div style="width:200px">
+
+        <div class="bk" style="display: table; border-spacing: 2px;">
+            <div class="bk" style="display: table-row;">
+                <div class="bk bk-tooltip-row-label" style="display: table-cell;">{_('dim_country_code')} : </div>
+                <div class="bk bk-tooltip-row-value" style="display: table-cell;">
+                    <span class="bk" data-value="">@country_name</span>
+                    <span class="bk {fx_shitdows}" data-value="">@country_flag</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bk" style="display: table; border-spacing: 2px;">
+            <div class="bk" style="display: table-row;">
+                <div class="bk bk-tooltip-row-label" style="display: table-cell;">{_('dim_number_selected_players')} : </div>
+                <div class="bk bk-tooltip-row-value" style="display: table-cell;">
+                    <span class="bk" data-value="">@count</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    """
+
+    return  HoverTool(tooltips=tooltips)
+
 
 
 def countries_local_leagues_main(full_df, theme='light'):
@@ -31,8 +64,13 @@ def countries_local_leagues_main(full_df, theme='light'):
         count_per_country_club['percentage'] = count_per_country_club.apply(
             lambda x: round(x['count'] / total_counts[x['country_code']] * 100, 1), axis=1)
 
-        count_per_country_club['country_name'] = count_per_country_club['country_code'] \
-            .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+        # count_per_country_club['country_name'] = count_per_country_club['country_code'] \
+        #     .transform(lambda x: "%s %s" % (_(x, countries_translations()), _(x, countries_translations(), 'flag')))
+
+        count_per_country_club['country_name'] = count_per_country_club['country_code'].transform(lambda x: _(x, countries_translations()) )
+        count_per_country_club['country_flag'] = count_per_country_club['country_code'].transform(lambda x: _(x, countries_translations(), 'flag'))
+        count_per_country_club['country_name_flag'] = count_per_country_club['country_name'] + " " + count_per_country_club['country_flag']
+
 
         count_per_country_club = count_per_country_club.set_index('country_name')
 
@@ -40,7 +78,16 @@ def countries_local_leagues_main(full_df, theme='light'):
     else:
         count_per_country_club = plot_data
 
-    chart = count_per_country_club.hvplot.barh("country_name", "count", height=600, color='count', cmap='kgy') \
+    chart = count_per_country_club.hvplot.barh("country_name_flag", 
+                                                "count",
+                                                 height=600, 
+                                                color='count', 
+                                                cmap='kgy',
+                                                hover_cols=['country_name',
+                                                            'country_flag', 
+                                                            'count' ],
+                                                tools=[hover()]
+                                                ) \
         .opts(labelled=[],
               title=_('countries_local_leagues_plot_title'),
               fontsize={'yticks': 10, 'xticks': 10},
