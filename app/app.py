@@ -223,7 +223,11 @@ if __name__ == "__main__":
                             
                       },
                       #websocket_origin=["uefaeuro2020.herokuapp.com"],
-                      websocket_origin=["statseuro2020.com", "www.statseuro2020.com", "localhost"],
+                      websocket_origin=[ "statseuro2020.com",
+                                         "www.statseuro2020.com", 
+                                         "uefaeuro2020.herokuapp.com",
+                                         "localhost", 
+                                         ],
                       autoreload=True,
                       port=int(os.getenv("PORT", 80)),
                       threaded=True,
