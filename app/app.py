@@ -1,18 +1,22 @@
 import panel as pn
 from param import Composite
 from pages.overview import OverviewPage
+from pages.teams import TeamsPage
 from pages.about import AboutPage
 from pages.matches import MatchesPage
 from pages.test import TestPage
 import cache_manager
+
 import pandas as pd
+pd.options.plotting.backend
+
 import i18n
 import os
 
 from pdb import set_trace as bp
 
 from i18n import _
-i18n.set_lang_id('en')
+i18n.set_lang_id( i18n.available_languages()[0]  )
 
 
 root_dname = os.path.dirname(os.path.abspath(__file__))
@@ -68,6 +72,8 @@ css = '''
     font-family: babelstone !important;
 }
 
+
+
 '''
 
 
@@ -75,8 +81,8 @@ pn.extension(raw_css=[css],
             #raw_js=[tracker],
             js_modules={"fontloader":'resources/FontLoader.js',     #https://github.com/smnh/FontLoader 
                         },
-            js_files={"OWA":"resources/OWA.js"},
-            loading_spinner='dots', 
+            # js_files={"OWA":"resources/OWA.js"},
+            loading_spinner='bar', 
             loading_color='#00aa41')
 
 #pn.param.ParamMethod.loading_indicator = True
@@ -165,7 +171,11 @@ def get_lang_id():
 def overview_page(**kwargs):
     component = OverviewPage(full_df=full_df, lang_id=get_lang_id())
     return component.view()
-    
+
+def teams_page (**kwargs):
+    component = TeamsPage(full_df=full_df, lang_id=get_lang_id())
+    return component.view()
+
 def about_page(**kwargs):
     component = AboutPage(lang_id=get_lang_id())
     return component.view()
@@ -208,6 +218,7 @@ if __name__ == "__main__":
     
     server = pn.serve({ '/':overview_page,
                         '/overview': overview_page, 
+                        '/teams': teams_page, 
                         '/linkedin':linkedin_page,
                         '/about':about_page, 
                         '/matches':matches_page,
@@ -217,6 +228,7 @@ if __name__ == "__main__":
                     },
                       title={'/overview': 'Stats Euro 2020 ⚽️',
                             '/':'Stats Euro 2020 ⚽️',
+                            '/teams':'Teams',
                             '/linkedin':'LinkedIn Profile Pierre-Olivier Simonard',
                             '/about':'About',
                             '/matches':'Matches',

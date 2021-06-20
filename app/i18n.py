@@ -31,7 +31,8 @@ def field_positions_colors():
     return _field_positions_colors
 
 
-
+def available_languages():
+    return ['en', 'fr']
 
 def set_lang_id(lg_id):
     print("set lang : ", lg_id)
