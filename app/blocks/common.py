@@ -38,7 +38,7 @@ def fix_flags_hook(plot, element):
                 plot.handles['glyph'].text_font = {"value":"babelstone"}
                 print("worked : ", element)
             except:
-                print("failed : ", element)
+                #print("failed : ", element)
                 pass 
            
         if 'text_1_glyph' in plot.handles: 
