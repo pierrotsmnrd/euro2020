@@ -188,7 +188,7 @@ def dump_page(**kwargs):
 
 
 def test_page(**kwargs):
-    component = TestPage(lang_id=get_lang_id(), go='go' in pn.state.session_args)
+    component = TestPage(full_df=full_df, lang_id=get_lang_id())
     return component.view()
     
 

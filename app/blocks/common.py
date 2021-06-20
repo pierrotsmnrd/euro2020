@@ -16,7 +16,7 @@ def fix_flags_hook(plot, element):
     
     # for k in plot.handles:
     #     try:
-    #         plot.handles[k].text_font = "babelstone" 
+    #         plot.handles[k].text_font = {"value":"babelstone"}
     #         print(k)
     #     except:
     #         pass
@@ -35,24 +35,20 @@ def fix_flags_hook(plot, element):
         
         if "glyph" in plot.handles: #: and not isinstance(element, hv.element.chart.Bars):
             try:
-                plot.handles['glyph'].text_font = "babelstone"
+                plot.handles['glyph'].text_font = {"value":"babelstone"}
                 print("worked : ", element)
             except:
+                print("failed : ", element)
                 pass 
            
-            
-            
-
         if 'text_1_glyph' in plot.handles: 
-            print("handled text_1_glyph ")
-            plot.handles['text_1_glyph'].text_font = "babelstone"
-            plot.handles['text_1_glyph'].text_font = '42pt'
+            plot.handles['text_1_glyph'].text_font = {"value":"babelstone"}
         
 
         # doesn't seem necessary
-        # plot.handles['yaxis'].axis_label_text_font = "babelstone" 
-        # plot.handles['xaxis'].axis_label_text_font = "babelstone" 
-         
+        #plot.handles['yaxis'].axis_label_text_font = "babelstone" 
+        #plot.handles['xaxis'].axis_label_text_font = "babelstone" 
+        
         
 
 
