@@ -10,8 +10,6 @@ dependencies:
   - jupyterlab
   - pandas
   - holoviews
-  - geoviews
-  - geoviews-core
   - param
   - panel
   - hvplot
