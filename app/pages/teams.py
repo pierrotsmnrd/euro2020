@@ -22,14 +22,75 @@ class TeamsPage(BasePage):
         self.country_code = country_code
         self.theme=theme
 
-    @param.depends("lang_id", "theme")
+    @param.depends("lang_id", "theme", "received_gotit")
     def teams_list(self):
 
+        '''
         filepath = '../i18n/wip_%s.md'%(self.lang_id)
         f = open(filepath, 'r')
         content = f.read()
+        '''
+        
 
-        return  pn.pane.Markdown(content + " teams_list ", sizing_mode='stretch_width')
+        css = '''<style>
+        table.groups_list {
+            width:100%;
+        }
+
+        table.groups_list th {
+            border-bottom: 1px solid #ddd;
+        }
+
+        table.groups_list tr.noborder th {
+            border-bottom: 0px !important;
+        }
+
+        table.groups_list td {
+            text-align: center;
+            height:44px
+        }
+
+        table.groups_list td a {
+            color:white;
+            font-size:16px;
+            text-decoration:none;
+        }
+
+        table.groups_list td a:hover {
+            text-decoration:underline;
+            font-weight:bold;
+        }
+        </style>
+        '''
+        css = pn.pane.HTML(css)
+
+        groups_raw = self.full_df.sort_values(['group', 'country_name']).groupby(['group', 'country_name', 'country_code', 'country_flag']).groups.keys()
+
+
+        
+        groups = {}
+        for g in groups_raw:
+            if g[0] not in groups:
+                groups[g[0]] = []
+            groups[g[0]].append(  g[1:] )
+
+        
+
+        items = [css]
+        for gletter in 'ABCDEF':
+            title =  pn.pane.Markdown(f'''# {gletter} ''')  
+            
+            links = '''<table class='groups_list'><tr>'''
+            links += ''.join( [  f'''<td width="25%"><a href='/teams?team_id={p[1]}'> {p[0]} { p[2] }</a></td>'''  for p in groups[gletter]  ] )
+            links += '''</tr></table>'''
+            links =  pn.pane.HTML(links,  sizing_mode='stretch_width') 
+
+            items.append( pn.Row(title, links, sizing_mode='stretch_width') )
+            
+
+        
+        
+        return  pn.Column(objects=items, sizing_mode='stretch_width')
         
 
     @param.depends("lang_id", "theme", "received_gotit")
@@ -37,8 +98,6 @@ class TeamsPage(BasePage):
 
         if not self.received_gotit:
             return pn.Column(pn.pane.HTML('<br />'), sizing_mode='stretch_width')
-
-
 
         items = []
 
@@ -97,6 +156,7 @@ class TeamsPage(BasePage):
     
     def build_main(self, theme):
           
+       
         if self.country_code is None:
             theme.main.append(self.teams_list)
         else:
