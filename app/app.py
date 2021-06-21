@@ -173,7 +173,10 @@ def overview_page(**kwargs):
     return component.view()
 
 def teams_page (**kwargs):
-    component = TeamsPage(full_df=full_df, lang_id=get_lang_id())
+
+    country_code = pn.state.session_args.get('team_id')[0].decode('utf-8') if 'team_id' in pn.state.session_args else None
+
+    component = TeamsPage(full_df=full_df, lang_id=get_lang_id(), country_code=country_code)
     return component.view()
 
 def about_page(**kwargs):

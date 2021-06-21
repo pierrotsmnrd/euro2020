@@ -3,7 +3,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, default_hovertool, uses_shitdows
+from ..common import fix_flags_hook, br, default_hovertool, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
@@ -111,7 +111,7 @@ def players_max_selections_per_country_txt():
 
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class PlayersMaxSelectionsPerCountry(BaseBlock):
 

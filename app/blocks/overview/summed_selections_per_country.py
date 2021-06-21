@@ -3,7 +3,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, default_hovertool, sort_options
+from ..common import fix_flags_hook, br, default_hovertool, sort_options
 import pandas as pd
 
 import holoviews as hv
@@ -142,7 +142,7 @@ def summed_selections_per_country_plot(full_df, theme, sort_key="Total", asc=Tru
 
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class SummedSelectionsPerCountry(BaseBlock):
 

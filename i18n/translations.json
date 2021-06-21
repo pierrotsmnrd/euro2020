@@ -170,11 +170,11 @@
 
 "selections_title" : {   
                         "fr":"Experience des joueurs sélectionnés", 
-                        "en":"Selected players' experience"
+                        "en":"Selected players' expertise"
                     },
 "selections_subtitle_1" : {   
-                        "fr":"Certains joueurs ont déjà plus de 30 ans, et on accumulé beaucoup d'expérience en compétitions internationales.\nPour d'autres, c'est la toute première participation à un tel évènement.\n\nEn regardant le **nombre de sélection des joueurs** au début de la compétition, nous avons un bon indicateur de cet expérience.\n\nCommençons par regarder les joueurs les plus expérimentés de chaque pays : ", 
-                        "en":"Some players are in their mid 30s, and have accumulated lots of experience in international competitions.\nFor some others, it's their very first participation to such event.\n\nBy looking at the **number of selections of the players** before the championship starts, we have a good indicator of their experience.\n\nFirst, let's have a look to the most experimented players per country : "
+                        "fr":"Certains joueurs ont déjà plus de 30 ans, et on accumulé beaucoup d'expérience en compétitions internationales.\nPour d'autres, c'est la toute première participation à un tel évènement.\n\nEn regardant le **nombre de sélection des joueurs** au début de la compétition, nous avons un bon indicateur de leurs compétences.\n\nCommençons par regarder les joueurs les plus expérimentés de chaque pays : ", 
+                        "en":"Some players are in their mid 30s, and have accumulated lots of maturity in international competitions.\nFor some others, it's their very first participation to such event.\n\nBy looking at the **number of selections of the players** before the championship starts, we have a good indicator of their skills.\n\nFirst, let's have a look to the most experienced players per country : "
                     },
 "selections_subtitle_2" : {   
                         "fr":"Est ce que cela signifie pour autant que le Portugal est l'équipe la plus expérimentée ? Pas si sûr.   \n\nRegardons l'expérience de tous les joueurs du Portugal - Vous pouvez aussi consulter l'expérience de votre équipe préférée", 
@@ -187,6 +187,11 @@
 "selections_conclusion" : {   
                         "fr":"- Les _Diables Rouges_ de Belgique est finalement l'équipe la plus expérimentée, tous types de compétitions confondues.\n\n- La France est le deuxième pays le plus expérimenté, toutes compétitions confondues, mais seulement 8ème pour les matches de Championnats d'Europe.", 
                         "en":"- The _Red Devils_ of Belgium are actually the most experienced team, all kind of games considered.\n\n- France is the second most experience country, all kinds of games considered, but only 8th for the matches held in Euro Championships."
-                    }
+                    },
+
+
+
+"tab_squad":{"fr":"Effectif", "en":"Squad"},
+"tab_selections":{"fr":"Expérience", "en":"Experience"}
 
 }

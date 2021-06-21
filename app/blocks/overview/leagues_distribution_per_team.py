@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br
+from ..common import fix_flags_hook, br
 import pandas as pd
 
 import holoviews as hv
@@ -144,7 +144,7 @@ def leagues_distribution_per_team_txt():
             ) )
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class LeaguesDistributionPerTeam(BaseBlock):
 

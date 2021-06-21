@@ -2,13 +2,15 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, uses_shitdows
+from ..common import fix_flags_hook, br, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
 
 import os
 import cache_manager
+
+from pdb import set_trace as bp
 
 _sankey_full_singleton = None
 
@@ -236,7 +238,7 @@ def clubs_distribution_per_team_main(full_df, theme='light'):
 
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class ClubsDistributionPerTeam(BaseBlock):
 
@@ -265,3 +267,17 @@ class ClubsDistributionPerTeam(BaseBlock):
                     )
             return items 
 
+
+class ClubsDistributionForTeam(BaseBlock):
+
+    def __init__(self, full_df, country_code, theme):
+        super(BaseBlock, self).__init__()
+        self.main_plot = sankey_for_country_code(country_code, 
+                                                sankey_full=build_sankey_full(full_df),
+                                                theme=theme)
+
+        self.preloading = False
+    
+    def items(self):
+       
+        return [  self.main_plot ]

@@ -98,6 +98,60 @@ class BasePage(param.Parameterized):
                                 width=400)
                     )
 
+    def gotit_checkbox(self):
+
+        if not self.received_gotit:
+
+            checkbox =  pn.widgets.Checkbox.from_param(self.param.received_gotit, 
+                                name="gotit",
+                                css_classes=['gotit-hide']
+                            )
+
+
+            trigger_on_fonts_loaded = pn.pane.HTML(''' <script> 
+                                            
+                                var fired = false;
+
+                                var fontLoader = new FontLoader(["babelstone"], {
+                                    "fontLoaded": function(font) {
+                                            // One of the fonts was loaded
+                                            console.log("font loaded: " + font.family);
+                                    },
+                                    "complete": function(error) {
+                                        if (error !== null) {
+                                            // Reached the timeout but not all fonts were loaded
+                                            console.log(error.message);
+                                            console.log(error.notLoadedFonts);
+                                        } else {
+                                            // All fonts were loaded
+                                            console.log("all fonts were loaded");
+
+                                            if ( !fired) {
+
+                                                Array.from(document.getElementsByTagName('input')).forEach(function(item) {
+                                                    if (item.nextSibling.innerHTML == 'gotit' ){
+                                                        item.click()
+                                                        item.remove();
+                                                        fired = true;
+                                                    }
+                                                });
+
+
+                                            }
+                                            
+
+                                        }
+                                    }
+                                }, 10000);
+                                fontLoader.loadFonts();
+                                            
+                                            
+                                            </script>''' )
+
+            return pn.Row(checkbox, trigger_on_fonts_loaded, )
+            
+        return pn.Row()
+
 
     def build_main(self, theme):
         print(" should be masked by the child class")
@@ -116,13 +170,17 @@ class BasePage(param.Parameterized):
 
         theme.header.append(self.header)
         theme.sidebar.append(self.menu)
-
+        theme.sidebar.append(self.gotit_checkbox)
 
         self.build_main(theme)
 
 
+        # theme.sidebar.append(pn.pane.HTML('''<script>
+        # document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
+        # </script>'''))
+
         theme.sidebar.append(pn.pane.HTML('''<script>
-        document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
+        document.getElementById('header').getElementsByClassName('mdc-top-app-bar__navigation-icon')[0].click()
         </script>'''))
         
         return theme

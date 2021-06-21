@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, uses_shitdows
+from ..common import fix_flags_hook, br, uses_shitdows
 import pandas as pd
 
 import os
@@ -107,7 +107,7 @@ def countries_local_leagues_txt():
 
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class CountriesLocalLeagues(BaseBlock):
 

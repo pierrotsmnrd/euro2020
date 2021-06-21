@@ -106,79 +106,6 @@ class TestPage(param.Parameterized):
     def menu(self):
         return menu('test')
 
-
-
-    @param.depends("lang_id", "theme", "received_gotit")
-    def teams_chapter(self):
-        
-        gspec = pn.GridSpec(  sizing_mode='stretch_width', 
-                              height=80, 
-                              
-                                )
-
-        
-        gspec[0  , : ] = pn.Column( pn.pane.Markdown(f'''## Test page '''),  )
-
-
-        if not self.received_gotit:
-
-            checkbox =  pn.widgets.Checkbox.from_param(self.param.received_gotit, 
-                                name="gotit",
-                                css_classes=['gotit-hide']
-                            )
-
-
-            trigger_on_fonts_loaded = pn.pane.HTML(''' <script> 
-                                            
-                                var fired = false;
-
-                                var fontLoader = new FontLoader(["babelstone"], {
-                                    "fontLoaded": function(font) {
-                                            // One of the fonts was loaded
-                                            console.log("font loaded: " + font.family);
-                                    },
-                                    "complete": function(error) {
-                                        if (error !== null) {
-                                            // Reached the timeout but not all fonts were loaded
-                                            console.log(error.message);
-                                            console.log(error.notLoadedFonts);
-                                        } else {
-                                            // All fonts were loaded
-                                            console.log("all fonts were loaded");
-
-                                            if ( !fired) {
-
-                                                Array.from(document.getElementsByTagName('input')).forEach(function(item) {
-                                                    if (item.nextSibling.innerHTML == 'gotit' ){
-                                                        item.click()
-                                                        item.remove();
-                                                        fired = true;
-                                                    }
-                                                });
-
-
-                                            }
-                                            
-
-                                        }
-                                    }
-                                }, 10000);
-                                fontLoader.loadFonts();
-                                            
-                                            
-                                            </script>''' )
-
-        
-            gspec[1   , :] = pn.Row( pn.pane.HTML( width=100, height=100, loading=True),
-                            checkbox, 
-                            trigger_on_fonts_loaded,
-                            
-                    )
-            
-            return gspec
-             
-
-        return gspec
     
 
     @param.depends("lang_id", "theme", "received_gotit")
@@ -284,8 +211,6 @@ class TestPage(param.Parameterized):
         theme.sidebar.append(self.menu)
 
         #theme.main.append(self.test_markdown)
-
-        theme.main.append(self.teams_chapter) 
         
         theme.main.append(self.players_chapter)
         

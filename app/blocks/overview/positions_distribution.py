@@ -3,10 +3,10 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, sort_options, uses_shitdows
+from ..common import fix_flags_hook, sort_options, uses_shitdows
 import pandas as pd
 import holoviews as hv
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 import os
 import cache_manager 
@@ -175,7 +175,7 @@ def positions_distribution_txt():
                         pn.pane.Markdown(explanations('positions_distribution')))
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class PositionsDistribution(BaseBlock):
 

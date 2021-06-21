@@ -2,7 +2,7 @@ import panel as pn
 from i18n import _, countries_translations, field_positions_colors, explanations
 from bokeh.models import HoverTool
 
-from .common import fix_flags_hook, br, default_hovertool, uses_shitdows
+from ..common import fix_flags_hook, br, default_hovertool, uses_shitdows
 import pandas as pd
 
 import holoviews as hv
@@ -99,7 +99,7 @@ def players_age_nbr_selections_main_txt():
 
 
 
-from .base_block import BaseBlock
+from ..base_block import BaseBlock
 
 class PlayersAgeNbrSelections(BaseBlock):
 
@@ -138,3 +138,15 @@ class PlayersAgeNbrSelections(BaseBlock):
 
 
 
+
+class PlayersAgeNbrSelectionsForTeam(BaseBlock):
+
+    def __init__(self, full_df, country_code, theme, dim="nbr_selections"):
+        super(BaseBlock, self).__init__()
+        self.main_plot = players_age_nbr_selections_plot(full_df, theme, dim, country_code)
+        self.preloading = False
+    
+
+    def items(self):
+        
+        return [ self.main_plot ]

@@ -108,3 +108,20 @@ def default_hovertool():
     hover = HoverTool(tooltips=tooltips_raw)
     return hover
 
+
+
+
+def table_markdown(header, row):
+
+    header_line = " | ".join(header)
+    sep_line = " | ".join( ["-----------"] * len(header)  )
+    row_line = " | ".join(   map(str, row))
+
+    result = f'''<div class="special_table"></div>
+| {header_line} |
+| {sep_line} |
+| {row_line} |
+'''
+    return result
+
+
