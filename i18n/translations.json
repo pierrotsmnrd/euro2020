@@ -18,7 +18,7 @@
 
 "years_old":{"fr":"ans", "en":"years old"},
 "dim_height" : {"fr":"Taille (cm)", "en":"Height (cm)"},
-"dim_weight" : {"fr":"Poids (kg)",  "en":"Weight (cm)"},
+"dim_weight" : {"fr":"Poids (kg)",  "en":"Weight (kg)"},
 "dim_field_position_hr" : {"fr":"Poste",  "en":"Position"},
 "dim_international_name" : {"fr":"Nom",  "en":"Name"},
 "dim_age" : {"fr":"Age",  "en":"Age"},
