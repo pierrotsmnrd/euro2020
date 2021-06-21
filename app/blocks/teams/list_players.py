@@ -122,6 +122,10 @@ class ListPlayers(BaseBlock):
 
         table.players_list td {
             text-align: center;
+            min-width: 52px;
+            min-height: 52px;
+            max-width: 52px;
+            max-height: 52px;
         }
         </style>
         '''
