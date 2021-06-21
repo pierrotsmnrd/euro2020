@@ -64,7 +64,7 @@ class TeamsPage(BasePage):
         '''
         css = pn.pane.HTML(css)
 
-        groups_raw = self.full_df.sort_values(['group', 'country_name']).groupby(['group', 'country_name', 'country_code', 'country_flag']).groups.keys()
+        groups_raw = self.full_df.sort_values(['group', 'country_name']).groupby(['group', 'country_code', 'country_flag']).groups.keys()
 
 
         
@@ -81,7 +81,7 @@ class TeamsPage(BasePage):
             title =  pn.pane.Markdown(f'''# {gletter} ''')  
             
             links = '''<table class='groups_list'><tr>'''
-            links += ''.join( [  f'''<td width="25%"><a href='/teams?team_id={p[1]}'> {p[0]} { p[2] }</a></td>'''  for p in groups[gletter]  ] )
+            links += ''.join( [  f'''<td width="25%"><a href='/teams?team_id={p[0]}&lg={i18n.get_lang_id()}'> { _(p[0], i18n.countries_translations()) } { p[1] }</a></td>'''  for p in groups[gletter]  ] )
             links += '''</tr></table>'''
             links =  pn.pane.HTML(links,  sizing_mode='stretch_width') 
 

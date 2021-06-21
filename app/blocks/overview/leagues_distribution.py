@@ -55,7 +55,7 @@ def leagues_distribution_main(full_df, theme='light'):
         count=_('dim_total'))
 
     # hardcoded because I need to spare time and mental health
-    align_on = "ENG"
+    align_on = "GER"
     x_position = "%s %s" % (_(align_on, countries_translations(), 'league'), _(
         align_on, countries_translations(), 'flag'))
     highlight_left = hv.VSpan(0, 6,).opts(color='#636363', shared_axes=False, toolbar=None,
