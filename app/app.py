@@ -81,7 +81,7 @@ pn.extension(raw_css=[css],
             #raw_js=[tracker],
             js_modules={"fontloader":'resources/FontLoader.js',     #https://github.com/smnh/FontLoader 
                         },
-            # js_files={"OWA":"resources/OWA.js"},
+            js_files={"OWA":"resources/OWA.js"},
             loading_spinner='bar', 
             loading_color='#00aa41')
 
