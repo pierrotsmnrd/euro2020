@@ -21,7 +21,7 @@
     "SWE":{"flag":"🇸🇪",    "fr":"Suède"                ,"en": "Sweden",                "league":"Allsvenskan"  },
     "FRA":{"flag":"🇫🇷",    "fr":"France"               ,"en": "France",                "league":"Ligue 1"  },
     "GER":{"flag":"🇩🇪",    "fr":"Allemagne"            ,"en": "Germany",               "league":"Bundesliga"  },
-    "HUN":{"flag":"🇭🇺",    "fr":"Hongrie"              ,"en": "Hungary",               "league":"Nemzeti Bajnokság I"  },
+    "HUN":{"flag":"🏳️‍🌈",    "fr":"Hongrie"              ,"en": "Hungary",               "league":"Nemzeti Bajnokság I"  },
     "POR":{"flag":"🇵🇹",    "fr":"Portugal"             ,"en": "Portugal",              "league":"Primeira Liga"  },
     "#All the following are for the clubs only":"",
     "JPN":{"flag":"🇯🇵",     "fr":"Japon"               ,"en":"Japan",                  "league":"J1リーグ"  }, 
