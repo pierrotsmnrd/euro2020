@@ -117,11 +117,12 @@ def summed_selections_per_country_plot(full_df, theme, sort_key="Total", asc=Tru
                                       title=_(f"match_category_{c}")
                                     ).opts(toolbar=None,
                                             hooks=[fix_flags_hook],
-                                           default_tools=[],
-                                           ylim=(0, 1700) if c == 'Total' else (
-                                               0, 570),
+                                            fontsize={'yticks': 10, 'xticks': 10},
+                                            default_tools=[],
+                                            ylim=(0, 1700) if c == 'Total' else (0, 570),
                                             xrotation=45, 
-
+                                            show_grid=True,
+                                            gridstyle={"ygrid_line_alpha":0}
                                            )\
                         .redim.values(country_name=ordered_countries_names)\
                         .redim.label(value=_("dim_nbr_selections"),
