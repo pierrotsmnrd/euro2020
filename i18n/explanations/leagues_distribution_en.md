@@ -6,5 +6,5 @@
 
 * Similar observation for the 19 players from the ukrainian league : 18 of them are ukrainians and in the national team, so there is only 1 player from the ukrainian league playing in another national team;
 
-* The german _Bundesliga_ is represented by **90 players**, i.e **3 fois plus** than the french _Ligue 1_.
+* The german _Bundesliga_ is represented by **90 players**, i.e **3 times more** than the french _Ligue 1_.
 
