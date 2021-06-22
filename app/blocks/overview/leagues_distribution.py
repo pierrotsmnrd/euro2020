@@ -38,13 +38,13 @@ def leagues_distribution_main(full_df, theme='light'):
     main = count_per_country_club.hvplot.bar(x='country_name_club',
                                              y='count',
                                              height=600,
-                                             width=1000,
+                                             width=1050,
                                              cmap='kgy',
                                              color='count',
                                              title=_(
                                                  'leagues_distribution_plot_title'),
                                              ).opts(
-        xrotation=45,
+        xrotation=55,
         fontsize={'yticks': 10, 'xticks': 10},
         toolbar=None,
         default_tools=[],
