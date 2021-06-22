@@ -10,6 +10,9 @@
  
 - Chef d'entreprise à <a target="blank" href="https://www.ioapps.io"  style="color:white"> IOAPPS </a>  
  
+- Partenaire européen de <a target="blank" href="https://www.quansight.com/"  style="color:white"> QUANSIGHT, vos experts data </a>  
+
+
 - <a target="blank" href="https://twitter.com/pierrotsmnrd?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @pierrotsmnrd</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 

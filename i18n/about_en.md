@@ -8,6 +8,8 @@
 
 - Data Engineer and teacher at the University of Strasbourg, France
  
+- European partner of <a target="blank" href="https://www.quansight.com/"  style="color:white"> QUANSIGHT, your data experts </a>  
+
 - Founder at <a target="blank" href="https://www.ioapps.io"  style="color:white"> IOAPPS </a>  
  
 - <a target="blank" href="https://twitter.com/pierrotsmnrd?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @pierrotsmnrd</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
