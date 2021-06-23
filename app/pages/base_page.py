@@ -174,14 +174,30 @@ class BasePage(param.Parameterized):
 
         self.build_main(theme)
 
+        theme.header.append(pn.pane.HTML('''<script>
+        function toggleMenu(){
+            console.log("test");
+            sidebar = document.getElementById("sidebar");
+            if (sidebar.classList.contains('mdc-drawer--open') ) {
+                sidebar.classList.remove("mdc-drawer--open");
+            } else {
+                sidebar.classList.add("mdc-drawer--open");
+            }
+        }
 
-        # theme.sidebar.append(pn.pane.HTML('''<script>
-        # document.getElementById('sidebar').classList.remove('mdc-drawer--open') 
-        # </script>'''))
+        var menubutton = document.getElementsByClassName('mdc-top-app-bar__navigation-icon')[0];
+        var newbutton = menubutton.cloneNode();
+        newbutton.innerHTML = "menu";
+        newbutton.onclick = toggleMenu;
 
-        theme.sidebar.append(pn.pane.HTML('''<script>
-        document.getElementById('header').getElementsByClassName('mdc-top-app-bar__navigation-icon')[0].click()
-        </script>'''))
+        menubutton.parentElement.replaceChild(newbutton, menubutton);
+
+        toggleMenu()
+        
+        </script>
+        
+        '''))
+        
         
         return theme
         
